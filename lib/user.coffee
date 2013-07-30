@@ -1,3 +1,5 @@
+crypto = require 'crypto'
+
 User = global.User = 
     
     _idx: 0
@@ -6,7 +8,7 @@ User = global.User =
 
         Database.db.collection('user').findOne {user:user}, (err, u) ->
 
-            if err
+            if u is null
 
                 callback '该用户未找到'
                 return
@@ -17,6 +19,7 @@ User = global.User =
                 req.session.user = u.user
                 req.session.nick = u.nick
                 req.session.data = u
+                req.session.logined = true
 
                 callback null, u
 
@@ -28,17 +31,17 @@ User = global.User =
 
         User._idx++
 
-        salt = require 'crypto'
-            .createHash 'sha256'
-            .update new Date().getTime() + Math.random() * 10000 + User._idx
-            .digest 'hex'
+        salt = crypto
+            .createHash('sha256')
+            .update((new Date().getTime() + Math.random() * 10000 + User._idx).toString())
+            .digest('hex')
 
         pass2 = User.MakeHash pass, salt
 
         Database.db.collection('user').findOne {user:user}, (err, u) ->
 
-            if not err
-                
+            if u
+
                 callback '该用户名已存在'
 
             Database.db.collection('user').insert {
@@ -48,7 +51,7 @@ User = global.User =
                 salt:   salt,
                 nick:   nick
 
-            }, ->
+            }, (err, result) ->
 
                 User.Login user, pass, req, ->
 
@@ -56,9 +59,9 @@ User = global.User =
 
     MakeHash: (pass, salt) ->
 
-        crypto = require 'crypto'
-        shasum = crypto.createHash 'sha256'
-        shasum.update pass
-        shasum.update shasum.digest('hex') + salt
-        shasum.update shasum.digest('hex')
-        shasum.digest 'hex'
+        pass = pass.toString()
+        salt = salt.toString()
+
+        s = crypto.createHash('sha256').update(pass).digest('hex')
+        s = crypto.createHash('sha256').update(s + salt).digest('hex')
+        crypto.createHash('sha256').update(s).digest('hex')

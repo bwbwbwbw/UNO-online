@@ -27,7 +27,7 @@ Server = global.Server =
             cookie:     { maxAge: Config.SessionMaxAge }
         
         app.use express.compress()
-        # app.use require('express-minify')({cache: BaseDir + '/cache'})
+        app.use require('express-minify')({cache: BaseDir + '/cache'})
         app.use express.static(BaseDir + '/public', {maxAge: Config.Expire})
 
         app.use express.errorHandler({ dumpExceptions: true, showStack: true })

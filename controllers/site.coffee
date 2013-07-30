@@ -18,11 +18,13 @@ exports.action_login = (req, res) ->
 
         if err
 
-            res.send JSON.stringify {errMsg: err, succeeded: false}
+            res.write JSON.stringify {errorMsg: err, succeeded: false}
+            res.end()
 
         else
 
-            res.send JSON.stringify {user: user}
+            res.write JSON.stringify {user: user}
+            res.end()
 
 exports.action_reg = (req, res) ->
 
@@ -30,8 +32,10 @@ exports.action_reg = (req, res) ->
 
         if err
 
-            res.send JSON.stringify {errMsg: err, succeeded: false}
+            res.write JSON.stringify {errorMsg: err, succeeded: false}
+            res.end()
 
         else
 
-            res.send JSON.stringify {}
+            res.write JSON.stringify {}
+            res.end()
