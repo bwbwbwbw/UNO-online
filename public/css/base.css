@@ -394,3 +394,30 @@ a:focus {
 .page-login .form-line-big {
   margin-top: 20px;
 }
+.page-index .page-right {
+  width: 150px;
+  float: right;
+}
+.page-index .page-left {
+  width: 100%;
+  float: left;
+  margin-left: -170px;
+}
+.page-index .left-wrap {
+  padding-left: 170px;
+}
+.page-index .module {
+  margin-bottom: 20px;
+}
+.page-index .module-title {
+  font-size: 1.3em;
+}
+.page-index .module-profile .nick {
+  font-size: 1.1em;
+  line-height: 1.8em;
+}
+.page-index .module-profile .score {
+  font-size: 0.9em;
+  color: #666;
+  line-height: 1.8em;
+}

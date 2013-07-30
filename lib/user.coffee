@@ -46,10 +46,13 @@ User = global.User =
 
             Database.db.collection('user').insert {
 
-                user:   user,
-                pass:   pass2,
-                salt:   salt,
+                user:   user
+                pass:   pass2
+                salt:   salt
                 nick:   nick
+                win:    0
+                lost:   0
+                regtime:new Date().getTime()
 
             }, (err, result) ->
 
