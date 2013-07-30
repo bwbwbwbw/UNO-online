@@ -10,6 +10,7 @@
         "socket.io":"*",
         "mongoskin":"*",
         "coffee-script":"*",
-        "continuation":"*"
+        "continuation":"*",
+        "moment":"*"
     }
 }

@@ -19,3 +19,5 @@ Config = global.Config =
 
         UIRev:      1
         Site:       'UNOOnline'
+    
+    Rooms:          200
