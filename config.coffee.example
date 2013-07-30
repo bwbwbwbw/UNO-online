@@ -1,0 +1,21 @@
+Config = global.Config = 
+    
+    ListenPort:     8080
+
+    CookieSecret:   '12345678'
+
+    SessionMaxAge:  1800000
+
+    Expire:         604800000
+
+    DB:
+
+        db:         'uno-ol'
+        host:       '127.0.0.1'
+        username:   'uno'
+        password:   'uno'
+
+    LocalVariables:
+
+        UIRev:      1
+        Site:       'UNOOnline'

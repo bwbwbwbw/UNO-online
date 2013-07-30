@@ -1,0 +1,11 @@
+lightenT(color, amount)
+	if $theme-style-light == true
+		lighten(color, amount)
+	else
+		darken(color, amount)
+
+darkenT(color, amount)
+	if $theme-style-light == true
+		darken(color, amount)
+	else
+		lighten(color, amount)

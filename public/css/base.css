@@ -1,0 +1,396 @@
+@charset "utf-8";
+html,
+body,
+div,
+span,
+applet,
+object,
+iframe,
+h1,
+h2,
+h3,
+h4,
+h5,
+h6,
+p,
+blockquote,
+pre,
+a,
+abbr,
+acronym,
+address,
+big,
+cite,
+code,
+del,
+dfn,
+em,
+img,
+ins,
+kbd,
+q,
+s,
+samp,
+small,
+strike,
+strong,
+sub,
+sup,
+tt,
+var,
+b,
+u,
+i,
+center,
+dl,
+dt,
+dd,
+ol,
+ul,
+li,
+fieldset,
+form,
+label,
+legend,
+table,
+caption,
+tbody,
+tfoot,
+thead,
+tr,
+th,
+td,
+article,
+aside,
+canvas,
+details,
+embed,
+figure,
+figcaption,
+footer,
+header,
+hgroup,
+menu,
+nav,
+output,
+ruby,
+section,
+summary,
+time,
+mark,
+audio,
+video {
+  margin: 0;
+  padding: 0;
+  border: 0;
+  font-size: 100%;
+  font: inherit;
+  vertical-align: baseline;
+}
+article,
+aside,
+details,
+figcaption,
+figure,
+footer,
+header,
+hgroup,
+menu,
+nav,
+section {
+  display: block;
+}
+body {
+  line-height: 1;
+}
+ol,
+ul {
+  list-style: none;
+}
+blockquote,
+q {
+  quotes: none;
+}
+blockquote:before,
+blockquote:after,
+q:before,
+q:after {
+  content: '';
+  content: none;
+}
+table {
+  table-layout: fixed;
+  border-collapse: collapse;
+  border-spacing: 0;
+}
+a img {
+  border: none;
+}
+:focus {
+  outline: 0;
+}
+@font-face {
+  font-family: 'PT Sans';
+  font-style: normal;
+  font-weight: 400;
+  src: url("../fonts/ptsans.eot");
+  src: local('PT Sans'), local('PTSans-Regular'), url("../fonts/ptsans.eot") format('embedded-opentype'), url("../fonts/ptsans.woff") format('woff'), url("../fonts/ptsans.ttf") format('truetype'), url("../fonts/ptsans.svg#PTSans") format('svg');
+}
+@font-face {
+  font-family: 'Open Sans';
+  font-style: normal;
+  font-weight: 400;
+  src: url("../fonts/opensans.eot");
+  src: local('Open Sans'), local('OpenSans'), url("../fonts/opensans.eot") format('embedded-opentype'), url("../fonts/opensans.woff") format('woff'), url("../fonts/opensans.ttf") format('truetype'), url("../fonts/opensans.svg#OpenSans") format('svg');
+}
+@font-face {
+  font-family: 'Oxygen Mono';
+  font-style: normal;
+  font-weight: 400;
+  src: url("../fonts/oxygenmono.eot");
+  src: local('Oxygen Mono'), local('OxygenMono-Regular'), url("../fonts/oxygenmono.eot") format('embedded-opentype'), url("../fonts/oxygenmono.woff") format('woff'), url("../fonts/oxygenmono.ttf") format('truetype'), url("../fonts/oxygenmono.svg#OxygenMono") format('svg');
+}
+.clear:after {
+  content: "\200B";
+  display: block;
+  height: 0;
+  clear: both;
+}
+.clear {
+  *zoom: 1;
+}
+body {
+  font-size: 14px;
+  color: #222;
+}
+body,
+input,
+select,
+textarea,
+button {
+  font-family: "Open Sans", "Segoe UI", "Lucida Grande", "Lucida", "Lucida Sans Unicode", "Lucida Sans", "Tahoma", "Verdana", "Microsoft YaHei", "微软雅黑";
+}
+p {
+  margin: 0 0 1.5em;
+}
+h1,
+h2,
+h3,
+h4,
+h5,
+h6 {
+  font-weight: normal;
+  color: #111;
+}
+h1 {
+  font-size: 3em;
+  line-height: 1;
+  margin-bottom: 0.5em;
+}
+h2 {
+  font-size: 2em;
+  margin-bottom: 0.75em;
+}
+h3 {
+  font-size: 1.5em;
+  line-height: 1;
+  margin-bottom: 1em;
+}
+h4 {
+  font-size: 1.2em;
+  line-height: 1.25;
+  margin-bottom: 1.25em;
+}
+h5 {
+  font-size: 1em;
+  font-weight: bold;
+  margin-bottom: 1.5em;
+}
+h6 {
+  font-size: 1em;
+  font-weight: bold;
+}
+li ul,
+li ol {
+  margin: 0;
+}
+ul,
+ol {
+  margin: 0 1.5em 1.5em 0;
+  padding-left: 1.5em;
+}
+ul {
+  list-style-type: disc;
+}
+ol {
+  list-style-type: decimal;
+}
+dl {
+  margin: 0 0 1.5em 0;
+}
+dl dt {
+  font-weight: bold;
+}
+dd {
+  margin-left: 1.5em;
+}
+del {
+  color: #666;
+}
+pre {
+  margin: 1.5em 0;
+  white-space: pre;
+}
+pre,
+code,
+tt {
+  word-wrap: break-word;
+  word-break: break-all;
+  font-family: "Oxygen Mono", "YaHei Consolas Hybrid", "Consolas", "Lucida Console", "Bitstream Vera Sans Mono", "Courier New", "Courier", "monospace", "宋体";
+  white-space: pre;
+}
+/*
+table {margin-bottom:1.4em;width:100%;}
+th {font-weight:bold;}
+thead th {background:#c3d9ff;}
+th, td, caption {padding:4px 10px 4px 5px;}
+tbody tr:nth-child(even) td, tbody tr.even td {background:#e5ecf9;}
+tfoot {font-style:italic;}
+*/
+.small {
+  font-size: 0.8em;
+  margin-bottom: 1.875em;
+  line-height: 1.875em;
+}
+.large {
+  font-size: 1.2em;
+  line-height: 2.5em;
+  margin-bottom: 1.25em;
+}
+body,
+html {
+  height: 100%;
+}
+body {
+  background: url("../img/bg.png") no-repeat right bottom;
+}
+a,
+a:visited {
+  color: #1aa90a;
+  text-decoration: none;
+}
+a:focus,
+a:hover {
+  color: #1fc80c;
+  text-decoration: underline;
+}
+a:focus {
+  background: #fffce5;
+  box-shadow: 0 0 5px #ffdf00;
+  outline: 1px solid #ffdf00;
+}
+.textbox {
+  margin: 0;
+  box-sizing: content-box;
+  height: 16px;
+  line-height: 16px;
+  outline: 0;
+  padding: 4px;
+  border: 1px solid #ccc;
+  -webkit-transition: all 0.2s linear;
+  -moz-transition: all 0.2s linear;
+  -ie-transition: all 0.2s linear;
+  transition: all 0.2s linear;
+  background: #fff;
+}
+.textbox:hover {
+  border-color: #b8b8b8;
+  background: #fff;
+}
+.textbox:focus {
+  border-color: #ffdf00;
+  background: #fff;
+  box-shadow: 0 0 5px #ffdf00;
+}
+.button {
+  cursor: default;
+  -webkit-user-select: none;
+  -moz-user-select: none;
+  -ie-user-select: none;
+  user-select: none;
+  display: inline-block;
+  *display: inline;
+  height: 16px;
+  box-sizing: content-box;
+  padding: 4px 18px;
+  line-height: 16px;
+  border: none;
+  background: #ebebeb;
+  margin: 0 2px;
+  -webkit-transition: all 0.2s linear;
+  -moz-transition: all 0.2s linear;
+  -ie-transition: all 0.2s linear;
+  transition: all 0.2s linear;
+}
+.button:hover {
+  background: #d8d8d8;
+}
+.button:focus {
+  box-shadow: 0 0 5px #ffdf00;
+  outline: 1px solid #ffdf00;
+  background: #fffce5;
+}
+.button:active {
+  background: #c5c5c5;
+}
+.button-def {
+  background: #1aa90a;
+  color: #fff;
+}
+.button-def:hover {
+  background: #1fc80c;
+}
+.button-def:active {
+  background: #179809;
+}
+.form-line {
+  margin: 5px 0;
+}
+.main-container {
+  padding-top: 60px;
+}
+.main-block {
+  margin: 0 auto;
+  width: 860px;
+  padding: 20px;
+  background: rgba(255,255,255,0.9);
+  box-shadow: 0 0 30px rgba(0,0,0,0.2);
+  min-height: 500px;
+  border-radius: 5px;
+}
+.page-login .main-sub-block {
+  width: 48%;
+}
+.page-login .main-left {
+  float: left;
+  padding-top: 150px;
+}
+.page-login .main-right {
+  float: right;
+  padding-top: 120px;
+}
+.page-login h2 {
+  text-align: center;
+}
+.page-login .comp-form {
+  font-size: 15px;
+  text-align: center;
+}
+.page-login .comp-form label {
+  display: inline-block;
+  width: 80px;
+  text-align: left;
+}
+.page-login .form-line-big {
+  margin-top: 20px;
+}

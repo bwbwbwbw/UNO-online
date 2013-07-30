@@ -2,7 +2,11 @@
     "name":"uno-online",
     "version":"0.0.1",
     "dependencies":{
+        "ejs":"*",
         "express":"*",
+        "express-minify":"*",
+        "express-partials":"*",
+        "connect-mongo":"*",
         "socket.io":"*",
         "mongoskin":"*",
         "coffee-script":"*",

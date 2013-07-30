@@ -1,4 +1,6 @@
 node_modules/
+cache/
+config.coffee
 
 lib-cov
 *.seed

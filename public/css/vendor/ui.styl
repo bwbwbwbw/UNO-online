@@ -1,0 +1,61 @@
+a, a:visited
+    color       $link-color
+    text-decoration none
+a:focus, a:hover
+    color       $link-color-hover
+    text-decoration underline
+a:focus
+    background  $focus-bg-color
+    box-shadow  $focus-box-shadow
+    outline     $focus-border
+
+.textbox
+    margin      0
+    box-sizing  content-box
+    height      16px
+    line-height 16px
+    outline     0
+    padding     4px
+    border      1px solid $textbox-border-color
+    transition  all .2s linear
+    background  $textbox-bg-color
+.textbox:hover
+    border-color $textbox-hover-border-color
+    background  $textbox-hover-bg-color
+.textbox:focus
+    border-color $focus-color
+    background  $textbox-hover-bg-color
+    box-shadow  $focus-box-shadow
+
+.button
+    cursor      default
+    user-select none
+    display     inline-block
+    *display    inline
+    height      16px
+    box-sizing  content-box
+    padding     4px 18px
+    line-height 16px
+    border      none
+    background  $button-color
+    margin      0 2px
+    transition  all .2s linear
+.button:hover
+    background  $button-color-hover
+.button:focus
+    box-shadow  $focus-box-shadow
+    outline     $focus-border
+    background  $focus-bg-color
+.button:active
+    background  $button-color-active
+
+.button-def
+    background  $link-color
+    color       $bg-color
+.button-def:hover
+    background  $link-color-hover
+.button-def:active
+    background  $button-def-color-active
+
+.form-line
+    margin      5px 0
