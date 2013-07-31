@@ -56,6 +56,8 @@ User = global.User =
 
             }, (err, result) ->
 
+                UID2Nick[result._id.toString()] = nick
+
                 User.Login user, pass, req, ->
 
                     callback null

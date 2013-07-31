@@ -2,6 +2,7 @@ express = require('express')
 mongostore = require('connect-mongo')(express)
 ioSession = require('socket.io-session')
 app = express()
+io = null
 
 onlineUsers = {}
 
@@ -10,10 +11,14 @@ Server = global.Server =
     Initialize: ->
 
         server = require('http').createServer app
+        io = require('socket.io').listen server
+
 
         # expose to global
         Server.app = app
         Server.onlineUsers = onlineUsers
+        Server.io = io
+
 
         # Initialize express
         app.set 'views', BaseDir + '/views'
@@ -40,8 +45,8 @@ Server = global.Server =
         app.use require('express-minify')({cache: BaseDir + '/cache'})
         app.use express.static(BaseDir + '/public', {maxAge: Config.Expire})
 
+
         # Initialize socket.io
-        io = require('socket.io').listen server
         #io.enable 'browser client minification'
         #io.enable 'browser client etag'
         #io.enable 'browser client gzip'
@@ -50,10 +55,12 @@ Server = global.Server =
         io.set 'authorization', ioSession(express.cookieParser(Config.CookieSecret), memoryStore)
         io.sockets.on 'connection', io_socket_connect
 
+
         app.use express.errorHandler({ dumpExceptions: true, showStack: true })
         ServerReadyHandlers.forEach (func) ->
             func.call app
         
+
         server.listen Config.ListenPort
 
         console.log 'Server listening at port ' + Config.ListenPort
@@ -67,7 +74,10 @@ middleware_request = (req, res, next) ->
 
 io_socket_connect = (socket) ->
 
+    # Bind event handlers
     socket.on 'disconnect', io_socket_disconnect
+    SocketIOReadyHandlers.forEach (func) ->
+        func.call socket
 
     # 在线用户统计
 
@@ -77,10 +87,12 @@ io_socket_connect = (socket) ->
     if typeof socket.handshake.session is 'undefined'
         return
 
-    uid = socket.handshake.session.data._id
+    uid = socket.handshake.session.data._id.toString()
 
+    # First time
     if not onlineUsers[uid]?
         onlineUsers[uid] = 0
+        io.sockets.emit '/user/join', {uid: uid, nick: UID2Nick[uid]}
 
     onlineUsers[uid]++
 
@@ -94,12 +106,12 @@ io_socket_disconnect = ->
     if typeof socket.handshake.session is 'undefined'
         return
 
-    uid = socket.handshake.session.data._id
+    uid = socket.handshake.session.data._id.toString()
     onlineUsers[uid]--
 
     if onlineUsers[uid] is 0
         delete onlineUsers[uid]
-
+        Server.io.sockets.emit '/user/leave', {uid: uid, nick: UID2Nick[uid]}
 
 ##########################################################################
 
@@ -107,15 +119,21 @@ onServerReady = ->
 
     app = @
     app.get '/', controller_index
+    app.post '/ajax/online_users', controller_onlines
 
 controller_index = (req, res) ->
 
-    if (!req.session.logined)
-
+    if not req.session.logined
         res.redirect '/login'
-
     else
-
         res.render 'index', {title: 'Hello'}
+
+controller_onlines = (req, res) ->
+
+    ret = []
+    ret.push {uid: uid, nick: UID2Nick[uid]} for uid, _ of onlineUsers
+
+    res.write JSON.stringify ret
+    res.end()
 
 ServerReadyHandlers.push onServerReady

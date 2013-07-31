@@ -15,4 +15,4 @@ Database = global.Database =
 
             users.forEach (user) ->
 
-                UID2Username[user._id.toString()] = user.nick
+                UID2Nick[user._id.toString()] = user.nick

@@ -1,5 +1,7 @@
 (function(window, undefined)
 {
+    window.SocketIOReadyHandlers = [];
+
     if (info.logined)
     {
         var socket = null;
@@ -8,10 +10,14 @@
         {
             socket = io.connect();
 
-            socket.on('news', function (data)
+            socket.on('connect', function()
             {
-                console.log(data);
-                socket.emit('my other event', { my: 'data' });
+
+                for (var i in SocketIOReadyHandlers)
+                {
+                    SocketIOReadyHandlers[i].call(socket);
+                }
+
             });
         });
     }

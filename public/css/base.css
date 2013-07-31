@@ -395,22 +395,23 @@ a:focus {
   margin-top: 20px;
 }
 .page-index .page-right {
-  width: 150px;
+  width: 180px;
   float: right;
 }
 .page-index .page-left {
   width: 100%;
   float: left;
-  margin-left: -170px;
+  margin-left: -200px;
 }
 .page-index .left-wrap {
-  padding-left: 170px;
+  padding-left: 200px;
 }
 .page-index .module {
   margin-bottom: 20px;
 }
 .page-index .module-title {
   font-size: 1.3em;
+  margin-bottom: 10px;
 }
 .page-index .module-profile .nick {
   font-size: 1.1em;
@@ -420,4 +421,10 @@ a:focus {
   font-size: 0.9em;
   color: #666;
   line-height: 1.8em;
+}
+.page-index .module-online-users .li {
+  font-size: 0.9em;
+  color: #666;
+  line-height: 1.8em;
+  margin-left: 15px;
 }
