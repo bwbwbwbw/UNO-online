@@ -10,14 +10,12 @@ Server = global.Server =
     Initialize: ->
 
         server = require('http').createServer app
-        io = require('socket.io').listen server
 
-        io.enable 'browser client minification'
-        io.enable 'browser client etag'
-        io.enable 'browser client gzip'
-        #io.set 'log level', 1
-        #io.set 'transports', ['websocket', 'htmlfile', 'xhr-polling', 'jsonp-polling']
+        # expose to global
+        Server.app = app
+        Server.onlineUsers = onlineUsers
 
+        # Initialize express
         app.set 'views', BaseDir + '/views'
         app.set 'view engine', 'ejs'
         app.locals Config.LocalVariables
@@ -37,18 +35,25 @@ Server = global.Server =
             store:      memoryStore
             cookie:     { maxAge: Config.SessionMaxAge }
         
-        io.set 'authorization', ioSession(express.cookieParser(Config.CookieSecret), memoryStore)
-        io.sockets.on 'connection', io_socket_connect
-
         app.use middleware_request
         app.use express.compress()
         app.use require('express-minify')({cache: BaseDir + '/cache'})
         app.use express.static(BaseDir + '/public', {maxAge: Config.Expire})
 
+        # Initialize socket.io
+        io = require('socket.io').listen server
+        #io.enable 'browser client minification'
+        #io.enable 'browser client etag'
+        #io.enable 'browser client gzip'
+        #io.set 'log level', 1
+        io.set 'transports', ['websocket', 'htmlfile', 'xhr-polling', 'jsonp-polling']
+        io.set 'authorization', ioSession(express.cookieParser(Config.CookieSecret), memoryStore)
+        io.sockets.on 'connection', io_socket_connect
+
         app.use express.errorHandler({ dumpExceptions: true, showStack: true })
-        require(BaseDir + '/lib/router.coffee')(app)
+        ServerReadyHandlers.forEach (func) ->
+            func.call app
         
-        server.app = app
         server.listen Config.ListenPort
 
         console.log 'Server listening at port ' + Config.ListenPort
@@ -94,3 +99,23 @@ io_socket_disconnect = ->
 
     if onlineUsers[uid] is 0
         delete onlineUsers[uid]
+
+
+##########################################################################
+
+onServerReady = ->
+
+    app = @
+    app.get '/', controller_index
+
+controller_index = (req, res) ->
+
+    if (!req.session.logined)
+
+        res.redirect '/login'
+
+    else
+
+        res.render 'index', {title: 'Hello'}
+
+ServerReadyHandlers.push onServerReady

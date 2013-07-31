@@ -10,3 +10,9 @@ Database = global.Database =
             Config.DB.host + '/' + Config.DB.db + 
             '?auto_reconnect'
         )
+
+        Database.db.collection('user').find().toArray (err, users)->
+
+            users.forEach (user) ->
+
+                UID2Username[user._id.toString()] = user.nick

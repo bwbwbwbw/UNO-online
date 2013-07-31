@@ -31,18 +31,19 @@
 
                 onSuccess: function(d)
                 {
-                    console.log(d);
+                    window.location = '/';
                 },
 
                 onFailure: function(d)
                 {
-                    console.log(d);
+                    alert(d.errorMsg);
                 },
 
                 onError: function(d)
                 {
-                    console.log(d);
+                    alert(d);
                 }
+                
             });
 
         });
@@ -87,17 +88,17 @@
 
                 onSuccess: function(d)
                 {
-                    console.log(d);
+                    window.location = '/';
                 },
 
                 onFailure: function(d)
                 {
-                    console.log(d);
+                    alert(d.errorMsg);
                 },
 
                 onError: function(d)
                 {
-                    console.log(d);
+                    alert(d);
                 }
 
             });

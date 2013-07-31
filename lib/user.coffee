@@ -68,3 +68,46 @@ User = global.User =
         s = crypto.createHash('sha256').update(pass).digest('hex')
         s = crypto.createHash('sha256').update(s + salt).digest('hex')
         crypto.createHash('sha256').update(s).digest('hex')
+
+##########################################################################
+
+onServerReady = ->
+
+    app = @
+    app.get '/login',           controller_login
+    app.post '/ajax/login',     controller_action_login
+    app.post '/ajax/reg',       controller_action_reg
+
+controller_login = (req, res) ->
+
+    res.render 'login', {title: '登录/注册'}
+
+controller_action_login = (req, res) ->
+
+    User.Login req.body.user, req.body.pass, req, (err, user) ->
+
+        if err
+
+            res.write JSON.stringify {errorMsg: err, succeeded: false}
+            res.end()
+
+        else
+
+            res.write JSON.stringify {}
+            res.end()
+
+controller_action_reg = (req, res) ->
+
+    User.Reg req.body.user, req.body.nick, req.body.pass, req, (err, _) ->
+
+        if err
+
+            res.write JSON.stringify {errorMsg: err, succeeded: false}
+            res.end()
+
+        else
+
+            res.write JSON.stringify {}
+            res.end()
+
+ServerReadyHandlers.push onServerReady
