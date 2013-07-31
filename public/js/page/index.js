@@ -3,8 +3,11 @@
 
     function user_join(uid, nick)
     {
-        user_leave(uid);
-        
+        var $user = $('.module-online-users .li[data-id="' + uid + '"]');
+
+        if ($user.length > 0)
+            return;
+
         var $li = $('<div class="li" data-id="' + uid + '"></div>');
         $li.text(nick).hide();
 
@@ -18,7 +21,12 @@
 
     function user_leave(uid)
     {
-        $('.module-online-users .li[data-id="' + uid + '"]').fadeOut(200, function()
+        var $user = $('.module-online-users .li[data-id="' + uid + '"]');
+
+        if ($user.length == 0)
+            return;
+
+        $user.fadeOut(200, function()
         {
             $(this).remove();
         });
@@ -45,14 +53,15 @@
 
     function joinLeaveUpdater()
     {
-        socket.on('/user/join', function(uid, nick)
+        var socket = this;
+        socket.on('/user/join', function(data)
         {
-            user_join(uid, nick);
+            user_join(data.uid, data.nick);
         });
 
-        socket.on('/user/leave', function(uid)
+        socket.on('/user/leave', function(data)
         {
-            user_leave(uid);
+            user_leave(data.uid);
         });
     }
 

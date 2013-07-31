@@ -67,9 +67,15 @@ Server = global.Server =
 
 middleware_request = (req, res, next) ->
 
+    if req.session? and req.session.logined?
+        res.locals.uid = req.session.uid
+        res.locals.user = req.session.user
+        res.locals.nick = req.session.nick
+        res.locals.data = req.session.data
+        res.locals.logined = true
+
     res.locals.request = req
-    res.locals.logined = if req.session? and req.session.logined? then req.session.logined else false
-    
+
     next()
 
 io_socket_connect = (socket) ->
