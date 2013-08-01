@@ -8,7 +8,7 @@
 
         $(document).ready(function()
         {
-            socket = io.connect();
+            socket = window._socket = io.connect();
 
             socket.on('connect', function()
             {
