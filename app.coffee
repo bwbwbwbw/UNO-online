@@ -1,9 +1,10 @@
 global.BaseDir = __dirname
 global.moment = require 'moment'
 
-global.UID2Nick = {};
-global.ServerReadyHandlers = [];
-global.SocketIOReadyHandlers = [];
+global.UID2Nick = {}
+global.ServerReadyHandlers = []
+global.SocketIOReadyHandlers = []
+global.ClientLeaveHandlers = {}
 
 require './config.coffee'
 

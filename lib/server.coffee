@@ -8,6 +8,8 @@ onlineUsers = {}
 
 Server = global.Server = 
     
+    SocketID: 0
+
     Initialize: ->
 
         server = require('http').createServer app
@@ -38,7 +40,6 @@ Server = global.Server =
         app.use express.session
             secret:     Config.CookieSecret
             store:      memoryStore
-            cookie:     { maxAge: Config.SessionMaxAge }
         
         app.use middleware_request
         app.use express.compress()
@@ -65,6 +66,14 @@ Server = global.Server =
 
         console.log 'Server listening at port ' + Config.ListenPort
 
+    ClientEnter: (socket, action, data) ->
+
+        if  socket._action? && ClientLeaveHandlers[socket._action]?
+            ClientLeaveHandlers[socket._action].call socket, data
+
+        socket._action = action
+        socket._data = data
+
 middleware_request = (req, res, next) ->
 
     if req.session? and req.session.logined?
@@ -80,13 +89,18 @@ middleware_request = (req, res, next) ->
 
 io_socket_connect = (socket) ->
 
+    Server.SocketID++
+    socket._id = Server.SocketID
+
     # Bind event handlers
     socket.on 'disconnect', io_socket_disconnect
     SocketIOReadyHandlers.forEach (func) ->
         func.call socket
 
-    # 在线用户统计
+    # Socket status
+    Server.ClientEnter socket, 'index'
 
+    # Online users
     if typeof socket.handshake is 'undefined'
         return
 
@@ -106,6 +120,10 @@ io_socket_disconnect = ->
 
     socket = this
 
+    # Change status
+    Server.ClientEnter socket, 'offline'
+
+    # Online users
     if typeof socket.handshake is 'undefined'
         return
 
@@ -127,6 +145,16 @@ onServerReady = ->
     app.get '/', controller_index
     app.post '/ajax/online_users', controller_onlines
 
+onSocketIOReady = ->
+
+    socket = @
+    socket.on '/action/go/home', controller_gohome
+
+controller_gohome = (data) ->
+
+    socket = @
+    Server.ClientEnter socket, 'index'
+
 controller_index = (req, res) ->
 
     if not req.session.logined
@@ -143,3 +171,4 @@ controller_onlines = (req, res) ->
     res.end()
 
 ServerReadyHandlers.push onServerReady
+SocketIOReadyHandlers.push onSocketIOReady

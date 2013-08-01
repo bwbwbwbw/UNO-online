@@ -1,6 +1,79 @@
 (function(window, undefined)
 {
 
+    var TEMPLATE_SPLASH = '<div id="jSplash"><div id="ball"></div><div id="ball-0"></div><div id="ball-1"></div></div>';
+    var TEMPLATE_PAGE_ROOM = '';
+
+    function action_join_room(rid)
+    {
+        var $splash = $(TEMPLATE_SPLASH);
+        $splash.appendTo('body');
+
+        _socket.emit('/action/go/room', {id: rid});
+
+        //Clear
+        $('.page-room').html(TEMPLATE_PAGE_ROOM);
+        
+        $('.page-index').fadeOut(500, function()
+        {
+
+            $('.page-room').fadeIn(500);
+            $splash.fadeOut(500, function()
+            {
+                $(this).remove();
+            });
+
+        });
+    }
+
+    function room_update(rid, current, started)
+    {
+        var $room = $('.module-rooms .li[data-id="' + rid + '"]');
+
+        if ($room.length == 0)
+            return;
+
+        $room.find('.max').text(current + ' / ' + max);
+
+        if (started)
+            $room.addClass('disabled');
+    }
+
+    function room_open(rid, name, max, current, started)
+    {
+        var $room = $('.module-rooms .li[data-id="' + rid + '"]');
+
+        if ($room.length > 0)
+            return;
+
+        var $li = $('<div class="li" data-id="' + rid + '"><div class="name"></div><div class="max"></div><div class="clear"></div></div>');
+        $li.find('.name').text(name);
+        $li.find('.max').text(current + ' / ' + max);
+
+        if (started)
+            $li.addClass('disabled');
+
+        $li.hide().appendTo('.module-rooms .module-content');
+
+        setTimeout(function()
+        {
+            $li.fadeIn(200);
+        }, 0);
+    }
+
+    function room_close(rid)
+    {
+        var $room = $('.module-rooms .li[data-id="' + rid + '"]');
+
+        if ($room.length == 0)
+            return;
+
+        $room.fadeOut(200, function()
+        {
+            $(this).remove();
+        });
+    }
+
     function user_join(uid, nick)
     {
         var $user = $('.module-online-users .li[data-id="' + uid + '"]');
@@ -9,9 +82,7 @@
             return;
 
         var $li = $('<div class="li" data-id="' + uid + '"></div>');
-        $li.text(nick).hide();
-
-        $('.module-online-users .module-content').append($li);
+        $li.text(nick).hide().appendTo('.module-online-users .module-content');
 
         setTimeout(function()
         {
@@ -32,8 +103,18 @@
         });
     }
 
-    function queryOnlineUsers()
+    function onlineUserUpdater()
     {
+        var socket = this;
+        socket.on('/user/join', function(data)
+        {
+            user_join(data.uid, data.nick);
+        });
+
+        socket.on('/user/leave', function(data)
+        {
+            user_leave(data.uid);
+        });
 
         vj.ajax({
 
@@ -48,29 +129,102 @@
             }
 
         });
-
     }
 
-    function joinLeaveUpdater()
+    function roomUpdater()
     {
         var socket = this;
-        socket.on('/user/join', function(data)
+        socket.on('/room/open', function(data)
         {
-            user_join(data.uid, data.nick);
+            room_open(data.id, data.name, data.max, 1, false);
         });
 
-        socket.on('/user/leave', function(data)
+        socket.on('/room/update', function(data)
         {
-            user_leave(data.uid);
+            room_open(data.id, data.current, data.started);
+        });
+
+        socket.on('/room/close', function(data)
+        {
+            room_close(data.id);
+        });
+
+        vj.ajax({
+
+            action: 'rooms',
+
+            onSuccess: function(d)
+            {
+                for (var i in d)
+                {
+                    room_open(d[i].id, d[i].name, d[i].max, d[i].current, d[i].started)
+                }
+            }
+
         });
     }
 
-    SocketIOReadyHandlers.push(queryOnlineUsers);
-    SocketIOReadyHandlers.push(joinLeaveUpdater);
+    function contentPrepare()
+    {
+        $('.page-index').fadeIn(500);
+    }
+
+    SocketIOReadyHandlers.push(onlineUserUpdater);
+    SocketIOReadyHandlers.push(roomUpdater);
+    SocketIOReadyHandlers.push(contentPrepare);
 
     $(document).ready(function()
     {
-        
+        TEMPLATE_PAGE_ROOM = $('.page-room').html();
+
+        $('.role-show-create-room').click(function()
+        {
+            $('.role-create-room-wrapper').fadeIn(200);
+            $('.role-create-room-name').focus();
+        });
+
+        $('.role-create-room-button').click(function()
+        {
+            var max = parseInt($('.role-create-room-max').val());
+            $('.role-create-room-max').val( max );
+
+            if (max < 2)
+            {
+                alert('人数至少为2人');
+                return;
+            }
+
+            vj.ajax({
+
+                action:     'room/create',
+                data:       {
+
+                    name:   $('.role-create-room-name').val(),
+                    max:    max
+
+                },
+
+                onSuccess:  function(data)
+                {
+                    $('.role-create-room-name').val('');
+                    $('.role-create-room-max').val('10');
+                    $('.role-create-room-wrapper').fadeOut(100);
+
+                    action_join_room(data.id);
+                },
+
+                onFailure: function(d)
+                {
+                    alert(d.errorMsg);
+                },
+
+                onError: function(d)
+                {
+                    alert('网络错误');
+                }
+
+            })
+        });
     });
 
 })(window);
