@@ -636,6 +636,11 @@ a:focus {
   font-size: 0.9em;
   color: #666;
   padding: 8px;
+  position: relative;
+  -webkit-pointer-events: none;
+  -moz-pointer-events: none;
+  -ie-pointer-events: none;
+  pointer-events: none;
 }
 .module-online-users .li:hover,
 .module-room-users .li:hover {
@@ -646,6 +651,34 @@ a:focus {
 .module-room-users .li.highlight {
   background: rgba(255,0,0,0.5);
   color: #fff;
+}
+.module-online-users .li.highlightText,
+.module-room-users .li.highlightText {
+  color: #f00;
+}
+.module-online-users .li .indicator,
+.module-room-users .li .indicator {
+  opacity: 0;
+  width: 10px;
+  height: 10px;
+  position: absolute;
+  margin-top: -5px;
+  top: 50%;
+  left: -15px;
+  -webkit-transition: opacity 0.2s linear;
+  -moz-transition: opacity 0.2s linear;
+  -ie-transition: opacity 0.2s linear;
+  transition: opacity 0.2s linear;
+}
+.module-online-users .indicator.current,
+.module-room-users .indicator.current {
+  background: rgba(255,0,0,0.9);
+  opacity: 1;
+}
+.module-online-users .indicator.next,
+.module-room-users .indicator.next {
+  background: rgba(255,0,0,0.9);
+  opacity: 0.3;
 }
 .module-rooms .li {
   padding: 0 10px;
@@ -883,6 +916,27 @@ a:focus {
 }
 .stage-card-mine .card:hover {
   top: 20px;
+}
+.turn-indicator {
+  width: 500px;
+  height: 100px;
+  position: absolute;
+  left: 50%;
+  top: -100px;
+  margin-left: -250px;
+  color: #222;
+  font-size: 50px;
+  opacity: 0;
+  -webkit-transition: all 0.5s ease-in-out;
+  -moz-transition: all 0.5s ease-in-out;
+  -ie-transition: all 0.5s ease-in-out;
+  transition: all 0.5s ease-in-out;
+  text-align: center;
+  line-height: 100px;
+}
+.turn-indicator.show {
+  opacity: 1;
+  top: 100px;
 }
 @-moz-keyframes jump {
   0% {

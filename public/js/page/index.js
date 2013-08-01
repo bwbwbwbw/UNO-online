@@ -70,7 +70,7 @@
                 for (var i in d.players)
                     room_join(d.players[i].uid, d.players[i].nick);
 
-                $('.module-room-users .li').eq(0).addClass('highlight');
+                //$('.module-room-users .li').eq(0).addClass('highlight');
 
                 window.onRoomGetDetail(d);
             }
@@ -98,6 +98,10 @@
 
         var $li = $('<div class="li" data-id="' + uid + '"></div>');
         $li.text(nick).hide().appendTo('.module-room-users .module-content');
+        $li.append('<div class="indicator"></div>');
+
+        if (uid == info.uid)
+            $li.addClass('highlightText');
 
         setTimeout(function()
         {
@@ -115,7 +119,7 @@
         $user.fadeOut(200, function()
         {
             $(this).remove();
-            $('.module-room-users .li').removeClass('highlight').eq(0).addClass('highlight');
+            //$('.module-room-users .li').removeClass('highlight').eq(0).addClass('highlight');
             window.onRoomUserLeave();
         });
     }
@@ -354,7 +358,7 @@
         }
     }
     */
-    
+
     });
 
 })(window);

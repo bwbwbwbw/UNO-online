@@ -335,12 +335,31 @@ $right-width = 180
         font-size   0.9em
         color       #666
         padding     8px
+        position    relative
+        pointer-events none
     .li:hover
         background  rgba(255,0,0,0.05)
         color       #333
     .li.highlight
         background  rgba(255,0,0,0.5)
         color       #FFF
+    .li.highlightText
+        color       #F00
+    .li .indicator
+        opacity     0
+        width       10px
+        height      10px
+        position    absolute
+        margin-top  -5px
+        top         50%
+        left        -15px
+        transition  opacity .2s linear
+    .indicator.current
+        background  rgba(255,0,0,0.9)
+        opacity     1
+    .indicator.next
+        background  rgba(255,0,0,0.9)
+        opacity     0.3
 
 
 .module-rooms
@@ -418,3 +437,20 @@ for $color, $i in $card-colors
 
 .stage-card-mine .card:hover
     top         20px
+
+.turn-indicator
+    width       500px
+    height      100px
+    position    absolute
+    left        50%
+    top         -100px
+    margin-left -250px
+    color       #222
+    font-size   50px
+    opacity     0
+    transition  all .5s ease-in-out
+    text-align  center
+    line-height 100px
+.turn-indicator.show
+    opacity     1
+    top         100px
