@@ -116,7 +116,7 @@ controller_room_start = (req, res) ->
     rid = req.body.id
     uid = req.session.uid
 
-    if Room.Info[rid].Players[0].uid is not uid
+    if Room.Info[rid].Players[0].uid isnt uid
         res.write JSON.stringify {errorMsg: '喂喂你不是OP啊！', succeeded: false}
         res.end()
 

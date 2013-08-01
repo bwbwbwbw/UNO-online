@@ -122,7 +122,7 @@ Game = global.Game =
 
         if card.number is 'changecolor' or card.number is 'plus4'
 
-            return '参数不正确：未知的新花色' if extra is not 'green' and extra is not 'blue' and extra is not 'red' and extra is not 'yello'
+            return '参数不正确：未知的新花色' if extra isnt 'green' and extra isnt 'blue' and extra isnt 'red' and extra isnt 'yello'
 
         cardAvailable = 0
 
@@ -141,13 +141,15 @@ Game = global.Game =
         if room.CurrentCard is null
             # 第一局：只有第一个出牌的人可以出牌
 
-            if uid is not room.CurrentUid
+            if uid isnt room.CurrentUid
 
                 canPlayCard = false
 
             else
 
                 canPlayCard = true
+
+            console.log canPlayCard
 
         else
 
@@ -159,7 +161,7 @@ Game = global.Game =
             else
 
                 # 不完全一致：是否按顺序
-                if room.CurrentUid is not uid
+                if room.CurrentUid isnt uid
 
                     # 非下一个玩家
                     canPlayCard = false
@@ -225,7 +227,7 @@ Game = global.Game =
 
         if card.number is 'reverse'
 
-            if (cardCount % 2) is not 0
+            if not (cardCount % 2) is 0
                 
                 if room.CurrentDirection is 1
                     room.CurrentDirection = -1
@@ -273,3 +275,25 @@ Game = global.Game =
         # 下一局~
 
         Game.NextTurn rid
+        true
+
+
+
+onServerReady = ->
+
+    app = @
+    app.post '/ajax/game/play', Server.RequireLogin, controller_playcard
+
+onSocketIOReady = ->
+
+    socket = @
+
+controller_playcard = (req, res) ->
+
+    result = Game.PlayCard req.body.rid, req.body.uid, req.body.card, req.body.count, req.body.extra
+
+    res.write JSON.stringify result
+    res.end()
+
+ServerReadyHandlers.push onServerReady
+SocketIOReadyHandlers.push onSocketIOReady

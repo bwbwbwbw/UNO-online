@@ -917,6 +917,9 @@ a:focus {
 .stage-card-mine .card:hover {
   top: 20px;
 }
+.stage-card-mine .card.selected {
+  top: 10px;
+}
 .turn-indicator {
   width: 500px;
   height: 100px;

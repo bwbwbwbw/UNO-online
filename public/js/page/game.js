@@ -1,5 +1,6 @@
 (function(window, undefined)
 {
+    var card_uniqid = 0;
 
     var room_state;
 
@@ -38,6 +39,11 @@
         }
     }
 
+    window.onRoomLeave = function()
+    {
+        $('.turn-indicator').remove();
+    }
+
     //==========================================
 
     function append_start_button()
@@ -71,7 +77,7 @@
 
     //==========================================
 
-    var cards = [];
+    var cards;
 
     function gameHandler()
     {
@@ -82,8 +88,12 @@
 
     function eh_game_start(data)
     {
+        cards = [];
+
         $('.module-stage').html('<div class="stage-card-area"></div><div class="stage-card-mine"></div>');
         $('.role-start-game').remove();
+
+        room_state.isStarted = true;
 
         for (var k in data.cards)
         {
@@ -108,10 +118,13 @@
 
         for (var k in cards)
         {
+            card_uniqid++;
 
-            $('<div class="card card-' + cards[k].color + '-' + cards[k].number + '"></div>')
+            cards[k].uniqid = card_uniqid;
+            cards[k].dom = $('<div class="card card-' + cards[k].color + '-' + cards[k].number + '" data-color="' + cards[k].color + '" data-number="' + cards[k].number + '" data-cardid="' + card_uniqid + '"></div>')
                 .css('opacity', 0)
                 .appendTo('.stage-card-mine');
+
         }
 
         var intv = ($('.stage-card-mine').width() - 140 - 20) / (data.cards.length - 1);
@@ -123,14 +136,111 @@
             setTimeout(function()
             {
                 card.css('left', index * intv + 10);
-                card.css('opacity', 1);
+                card.css('opacity', 0.9);
             }, 100* index);
 
         });
+
+        //Event handlers
+        $('.stage-card-mine').on('click', '.card', function()
+        {
+            if ($(this).hasClass('selected'))
+            {
+                $(this).removeClass('selected');
+                $(this).css('opacity', 0.9);
+                return;
+            }
+            
+            $('.stage-card-mine .selected').removeClass('selected');
+                
+            //Select similar
+            var color = $(this).attr('data-color');
+            var number = $(this).attr('data-number');
+
+            $('.stage-card-mine .card').each(function()
+            {
+                if ($(this).attr('data-color') == color && $(this).attr('data-number') == number)
+                    $(this).addClass('selected').css('opacity', 1);
+            });
+            
+        });
+    }
+
+    function action_playcard()
+    {
+        var selected = $('.stage-card-mine .selected');
+
+        if (room_state.isStarted && selected.length > 0)
+        {
+
+            var color = selected.attr('data-color');
+            var number = selected.attr('data-number');
+            var count = selected.length;
+
+            vj.ajax({
+
+                action: 'game/play',
+                data:   {rid: room_state.rid, uid: info.uid, card: {color: color, number: number}, count: count, extea: null},
+                onSuccess: function(d)
+                {
+                    if (d !== true)
+                    {
+                        alert(d);
+                        return;
+                    }
+
+                    var selected_card_id = {};
+
+                    //出牌成功
+                    $('.stage-card-mine .selected').each(function()
+                    {
+                        selected_card_id[$(this).attr('data-cardid')] = true;
+                        $(this).css('opacity', 0);
+                    });
+
+                    setTimeout(function()
+                    {
+
+                        //Remove card
+
+                        for (var k = cards.length - 1; k>=0; k--)
+                        {
+                            if (selected_card_id[cards[k].uniqid])
+                            {
+                                cards[k].dom.remove();
+                                cards[k].dom = null;
+                                cards.splice(k, 1);
+                            }
+                        }
+
+                        //Re-arrange
+                        var intv = ($('.stage-card-mine').width() - 140 - 20) / (cards.length - 1);
+
+                        $('.stage-card-mine .card').each(function(index)
+                        {
+                            var card = $(this);
+
+                            setTimeout(function()
+                            {
+                                card.css('left', index * intv + 10);
+                            }, 50* index);
+
+                        });
+
+
+                    }, 500);
+
+                }
+
+            });
+
+        }
     }
 
     function eh_game_turn(data)
     {
+        $('.turn-indicator').remove();
+
         $('.module-room-users .indicator').removeClass('current next');
         $('.module-room-users [data-id="' + data.current_uid + '"] .indicator').addClass('current');
         $('.module-room-users [data-id="' + data.next_uid + '"] .indicator').addClass('next');
@@ -144,6 +254,20 @@
             }, 0);
         }
     }
+
+    $(document).ready(function()
+    {
+        $(document).keypress(function(e)
+        {
+            var tag = e.target.tagName.toLowerCase();
+            if ( e.which === 32 && tag != 'input' && tag != 'textarea') 
+            {
+
+                action_playcard();
+                
+            }
+        });
+    });
 
     SocketIOReadyHandlers.push(gameHandler);
 
