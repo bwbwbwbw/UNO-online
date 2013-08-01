@@ -268,71 +268,6 @@ body
 .page-index
     
     display         none
-
-    $right-width = 180
-
-    .page-right
-        width       ($right-width)px
-        float       right
-
-    .page-left
-        width       100%
-        float       left
-        margin-left (- $right-width - 20)px
-    .left-wrap
-        padding-left ($right-width + 20)px
-    
-    .module
-        margin-bottom 20px
-    
-    .module-title
-        font-size       1.3em
-        margin-bottom   10px
-
-    .module-profile
-
-        .nick
-            font-size   1.1em
-            line-height 1.8em
-        .score
-            font-size   0.9em
-            color       #666
-            line-height 1.8em
-
-    .module-online-users
-
-        .li
-            font-size   0.9em
-            color       #666
-            line-height 1.8em
-            margin-left 15px
-
-    .module-rooms
-
-        .li
-            padding     0 10px
-            margin-bottom 10px
-            border      1px solid #FFF
-            background  #FFECEC
-            transition  background-color .2s linear, border-color .2s linear
-            line-height 40px
-            cursor      pointer
-
-        .li:hover
-            border-color #FFC4C4
-            text-decoration none
-
-        .li.disabled
-            background  none
-            border-color none
-            opacity     0.5
-
-        .li .name
-            float       left
-            font-size   17px
-
-        .li .max
-            float       right
     
     .role-create-room
 
@@ -350,3 +285,72 @@ body
     .role-create-room-max
 
         width           60px
+
+.page-room
+    
+    display         none
+
+$right-width = 180
+
+.page-right
+    width       ($right-width)px
+    float       right
+
+.page-left
+    width       100%
+    float       left
+    margin-left (- $right-width - 20)px
+.left-wrap
+    padding-left ($right-width + 20)px
+
+.module
+    margin-bottom 20px
+
+.module-title
+    font-size       1.3em
+    margin-bottom   10px
+
+.module-profile
+
+    .nick
+        font-size   1.1em
+        line-height 1.8em
+    .score
+        font-size   0.9em
+        color       #666
+        line-height 1.8em
+
+.module-online-users
+
+    .li
+        font-size   0.9em
+        color       #666
+        line-height 1.8em
+        margin-left 15px
+
+.module-rooms
+
+    .li
+        padding     0 10px
+        margin-bottom 10px
+        border      1px solid #FFF
+        background  #FFECEC
+        transition  background-color .2s linear, border-color .2s linear
+        line-height 40px
+        cursor      pointer
+
+    .li:hover
+        border-color #FFC4C4
+        text-decoration none
+
+    .li.disabled
+        background  none
+        border-color none
+        opacity     0.5
+
+    .li .name
+        float       left
+        font-size   17px
+
+    .li .max
+        float       right

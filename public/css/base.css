@@ -577,68 +577,6 @@ a:focus {
 .page-index {
   display: none;
 }
-.page-index .page-right {
-  width: 180px;
-  float: right;
-}
-.page-index .page-left {
-  width: 100%;
-  float: left;
-  margin-left: -200px;
-}
-.page-index .left-wrap {
-  padding-left: 200px;
-}
-.page-index .module {
-  margin-bottom: 20px;
-}
-.page-index .module-title {
-  font-size: 1.3em;
-  margin-bottom: 10px;
-}
-.page-index .module-profile .nick {
-  font-size: 1.1em;
-  line-height: 1.8em;
-}
-.page-index .module-profile .score {
-  font-size: 0.9em;
-  color: #666;
-  line-height: 1.8em;
-}
-.page-index .module-online-users .li {
-  font-size: 0.9em;
-  color: #666;
-  line-height: 1.8em;
-  margin-left: 15px;
-}
-.page-index .module-rooms .li {
-  padding: 0 10px;
-  margin-bottom: 10px;
-  border: 1px solid #fff;
-  background: #ffecec;
-  -webkit-transition: background-color 0.2s linear, border-color 0.2s linear;
-  -moz-transition: background-color 0.2s linear, border-color 0.2s linear;
-  -ie-transition: background-color 0.2s linear, border-color 0.2s linear;
-  transition: background-color 0.2s linear, border-color 0.2s linear;
-  line-height: 40px;
-  cursor: pointer;
-}
-.page-index .module-rooms .li:hover {
-  border-color: #ffc4c4;
-  text-decoration: none;
-}
-.page-index .module-rooms .li.disabled {
-  background: none;
-  border-color: none;
-  opacity: 0.5;
-}
-.page-index .module-rooms .li .name {
-  float: left;
-  font-size: 17px;
-}
-.page-index .module-rooms .li .max {
-  float: right;
-}
 .page-index .role-create-room {
   margin-bottom: 10px;
 }
@@ -651,6 +589,71 @@ a:focus {
 }
 .page-index .role-create-room-max {
   width: 60px;
+}
+.page-room {
+  display: none;
+}
+.page-right {
+  width: 180px;
+  float: right;
+}
+.page-left {
+  width: 100%;
+  float: left;
+  margin-left: -200px;
+}
+.left-wrap {
+  padding-left: 200px;
+}
+.module {
+  margin-bottom: 20px;
+}
+.module-title {
+  font-size: 1.3em;
+  margin-bottom: 10px;
+}
+.module-profile .nick {
+  font-size: 1.1em;
+  line-height: 1.8em;
+}
+.module-profile .score {
+  font-size: 0.9em;
+  color: #666;
+  line-height: 1.8em;
+}
+.module-online-users .li {
+  font-size: 0.9em;
+  color: #666;
+  line-height: 1.8em;
+  margin-left: 15px;
+}
+.module-rooms .li {
+  padding: 0 10px;
+  margin-bottom: 10px;
+  border: 1px solid #fff;
+  background: #ffecec;
+  -webkit-transition: background-color 0.2s linear, border-color 0.2s linear;
+  -moz-transition: background-color 0.2s linear, border-color 0.2s linear;
+  -ie-transition: background-color 0.2s linear, border-color 0.2s linear;
+  transition: background-color 0.2s linear, border-color 0.2s linear;
+  line-height: 40px;
+  cursor: pointer;
+}
+.module-rooms .li:hover {
+  border-color: #ffc4c4;
+  text-decoration: none;
+}
+.module-rooms .li.disabled {
+  background: none;
+  border-color: none;
+  opacity: 0.5;
+}
+.module-rooms .li .name {
+  float: left;
+  font-size: 17px;
+}
+.module-rooms .li .max {
+  float: right;
 }
 @-moz-keyframes jump {
   0% {
