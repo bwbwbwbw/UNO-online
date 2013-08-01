@@ -4,6 +4,18 @@
     $(document).ready(function()
     {
 
+        $('.role-login-pass').keypress(function(e)
+        {
+            if (e.which == 13)
+                $('.role-login').click();
+        });
+
+        $('.role-reg-pass-rep').keypress(function(e)
+        {
+            if (e.which == 13)
+                $('.role-reg').click();
+        });
+
         $('.role-login').click(function()
         {
 
