@@ -66,10 +66,18 @@ Server = global.Server =
 
         console.log 'Server listening at port ' + Config.ListenPort
 
+    RequireLogin: (req, res, next) ->
+
+        if req.session? and req.session.logined?
+            next()
+            return
+        
+        res.write JSON.stringify {errorMsg: 'Login required', succeeded: false}
+        res.end()
+
     ClientEnter: (socket, action, data) ->
 
         if socket._action? && ClientLeaveHandlers[socket._action]?
-            console.log socket._action
             ClientLeaveHandlers[socket._action].call socket, socket._data
 
         socket._action = action

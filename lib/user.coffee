@@ -41,8 +41,8 @@ User = global.User =
         Database.db.collection('user').findOne {user:user}, (err, u) ->
 
             if u
-
                 callback '该用户名已存在'
+                return
 
             Database.db.collection('user').insert {
 
@@ -56,10 +56,9 @@ User = global.User =
 
             }, (err, result) ->
 
-                UID2Nick[result._id.toString()] = nick
+                UID2Nick[result[0]._id.toString()] = nick
 
                 User.Login user, pass, req, ->
-
                     callback null
 
     MakeHash: (pass, salt) ->
@@ -89,12 +88,9 @@ controller_action_login = (req, res) ->
     User.Login req.body.user, req.body.pass, req, (err, user) ->
 
         if err
-
             res.write JSON.stringify {errorMsg: err, succeeded: false}
             res.end()
-
         else
-
             res.write JSON.stringify {}
             res.end()
 
@@ -103,12 +99,9 @@ controller_action_reg = (req, res) ->
     User.Reg req.body.user, req.body.nick, req.body.pass, req, (err, _) ->
 
         if err
-
             res.write JSON.stringify {errorMsg: err, succeeded: false}
             res.end()
-
         else
-
             res.write JSON.stringify {}
             res.end()
 

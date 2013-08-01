@@ -3,7 +3,7 @@
 
     var TEMPLATE_SPLASH = '<div id="jSplash"><div id="ball"></div><div id="ball-0"></div><div id="ball-1"></div></div>';
     var TEMPLATE_PAGE_ROOM = '';
-
+    
     function action_go_home()
     {
         $('.home-page-item').hide();
@@ -41,7 +41,7 @@
         }
 
         rid = data.rid
-        
+        window.onRoomEnter(rid);        
         //==================================================
         //Clear and initialize
 
@@ -57,16 +57,22 @@
             {
                 $room.find('.role-room-title').text(d.name);
 
-                $('<input class="button" type="button" value="退出房间">').click(action_go_home).appendTo('.role-room-title', $room);
+                $('<input class="button" type="button" value="退出房间">')
+                    .click(function()
+                    {
+                        if (confirm('您确定要退出房间吗? Ψ(｀▽´)Ψ'))
+                            action_go_home();
+                    })
+                    .appendTo('.role-room-title', $room);
 
                 document.title = d.name + ' - UNOOnline'
 
                 for (var i in d.players)
-                {
                     room_join(d.players[i].uid, d.players[i].nick);
-                }
 
                 $('.module-room-users .li').eq(0).addClass('highlight');
+
+                window.onRoomGetDetail(d);
             }
 
         });
@@ -110,10 +116,11 @@
         {
             $(this).remove();
             $('.module-room-users .li').removeClass('highlight').eq(0).addClass('highlight');
+            window.onRoomUserLeave();
         });
     }
 
-    function room_update(rid, current, started)
+    function room_update(rid, current, max, started)
     {
         var $room = $('.module-rooms .li[data-id="' + rid + '"]');
 
@@ -142,6 +149,9 @@
 
         $li.click(function()
         {
+            if ($(this).hasClass('disabled'))
+                return;
+            
             action_join_room(rid);
         });
         $li.hide().appendTo('.module-rooms .module-content');
@@ -235,7 +245,7 @@
 
         socket.on('/room/update', function(data)
         {
-            room_open(data.id, data.current, data.started);
+            room_update(data.id, data.current, data.max, data.started);
         });
 
         socket.on('/room/close', function(data)

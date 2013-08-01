@@ -53,9 +53,19 @@ Room = global.Room =
         Server.ClientEnter socket, 'room', {id: id}
         Room.Info[id].Players.push {socket: socket, uid: uid, nick: UID2Nick[uid]}
 
-        Server.io.sockets.emit '/room/update', {id: id, current: Room.Info[id].Players.length, started: Room.Info[id].Started}
+        Server.io.sockets.emit '/room/update', {id: id, current: Room.Info[id].Players.length, max: Room.Info[id].Max, started: Room.Info[id].Started}
 
         callback null
+
+    Start: (id) ->
+
+        return if Room.Info[id].Started
+
+        Room.Info[id].Started = true
+        Server.io.sockets.emit '/room/update', {id: id, current: Room.Info[id].Players.length, max: Room.Info[id].Max, started: Room.Info[id].Started}
+
+        for player in Room.Info[id].Players
+            player.socket.emit '/room/started'
 
 onClientLeaveRoom = (data) ->
 
@@ -84,13 +94,14 @@ onClientLeaveRoom = (data) ->
 
     else
 
-        Server.io.sockets.emit '/room/update', {id: id, current: Room.Info[id].Players.length, started: Room.Info[id].Started}
+        Server.io.sockets.emit '/room/update', {id: id, current: Room.Info[id].Players.length, max: Room.Info[id].Max, started: Room.Info[id].Started}
 
 onServerReady = ->
 
     app = @
-    app.post '/ajax/room/create', controller_room_create
-    app.post '/ajax/room/detail', controller_room_detail
+    app.post '/ajax/room/create', Server.RequireLogin, controller_room_create
+    app.post '/ajax/room/detail', Server.RequireLogin, controller_room_detail
+    app.post '/ajax/room/start', Server.RequireLogin, controller_room_start
     app.post '/ajax/rooms', controller_rooms
 
 controller_rooms = (req, res) ->
@@ -100,6 +111,25 @@ controller_rooms = (req, res) ->
 
     res.write JSON.stringify ret
     res.end()
+
+controller_room_start = (req, res) ->
+
+    rid = req.body.id
+    uid = req.session.uid
+
+    if Room.Info[rid].Players[0].uid is not uid
+        res.write JSON.stringify {errorMsg: '喂喂你不是OP啊！', succeeded: false}
+        res.end()
+
+    if Room.Info[rid].Players.length < 2
+        res.write JSON.stringify {errorMsg: '2人或以上才可以开始 >_<', succeeded: false}
+        res.end()
+
+    if Room.Info[rid].Started
+        res.write JSON.stringify {errorMsg: '游戏已经开始了啊 0.0', succeeded: false}
+        res.end()
+
+    Room.Start rid
 
 controller_room_detail = (req, res) ->
 

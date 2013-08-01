@@ -501,6 +501,8 @@ a:focus {
   display: inline-block;
   *display: inline;
   height: 16px;
+  -webkit-box-sizing: content-box;
+  -moz-box-sizing: content-box;
   box-sizing: content-box;
   padding: 4px 18px;
   line-height: 16px;
@@ -663,8 +665,9 @@ a:focus {
 }
 .module-rooms .li.disabled {
   background: none;
-  border-color: none;
+  border-color: #fff;
   opacity: 0.5;
+  cursor: default;
 }
 .module-rooms .li .name {
   float: left;
