@@ -4,15 +4,46 @@
     var TEMPLATE_SPLASH = '<div id="jSplash"><div id="ball"></div><div id="ball-0"></div><div id="ball-1"></div></div>';
     var TEMPLATE_PAGE_ROOM = '';
 
+    function action_go_home()
+    {
+        $('.home-page-item').hide();
+        $('.page-index').fadeIn(300);
+
+        _socket.emit('/action/go/home', {id: rid});
+    }
+
+    var join_splash;
+
     function action_join_room(rid)
     {
         var $splash = $(TEMPLATE_SPLASH);
         $splash.appendTo('body');
 
-        _socket.emit('/action/go/room', {id: rid});
+        join_splash = $splash;
 
-        //Clear and initialize
+        _socket.emit('/action/go/room', {id: rid});
+    }
+
+    function action_join_room_callback(data)
+    {
+        
+        if (data.err)
+        {
+            alert(data.err);
+
+            join_splash.fadeOut(500, function()
+            {
+                $(this).remove();
+                join_splash = null;
+            });
+
+            return;
+        }
+
+        rid = data.rid
+        
         //==================================================
+        //Clear and initialize
 
         var $room = $('.page-room');
         $room.html(TEMPLATE_PAGE_ROOM);
@@ -25,6 +56,15 @@
             onSuccess: function(d)
             {
                 $room.find('.role-room-title').text(d.name);
+
+                $('<input class="button" type="button" value="退出房间">').click(action_go_home).appendTo('.role-room-title', $room);
+
+                document.title = d.name + ' - UNOOnline'
+
+                for (var i in d.players)
+                {
+                    room_join(d.players[i].uid, d.players[i].nick);
+                }
             }
 
         });
@@ -34,7 +74,37 @@
         $('.page-index').hide();
 
         $('.page-room').fadeIn(500);
-        $splash.fadeOut(500, function()
+        join_splash.fadeOut(500, function()
+        {
+            $(this).remove();
+            join_splash = null;
+        });
+    }
+
+    function room_join(uid, nick)
+    {
+        var $user = $('.module-room-users .li[data-id="' + uid + '"]');
+
+        if ($user.length > 0)
+            return;
+
+        var $li = $('<div class="li" data-id="' + uid + '"></div>');
+        $li.text(nick).hide().appendTo('.module-room-users .module-content');
+
+        setTimeout(function()
+        {
+            $li.fadeIn(200);
+        }, 0);
+    }
+
+    function room_leave(uid)
+    {
+        var $user = $('.module-room-users .li[data-id="' + uid + '"]');
+
+        if ($user.length == 0)
+            return;
+
+        $user.fadeOut(200, function()
         {
             $(this).remove();
         });
@@ -102,6 +172,9 @@
         var $li = $('<div class="li" data-id="' + uid + '"></div>');
         $li.text(nick).hide().appendTo('.module-online-users .module-content');
 
+        if (uid == info.uid)
+            $li.addClass('highlight');
+
         setTimeout(function()
         {
             $li.fadeIn(200);
@@ -166,6 +239,8 @@
         {
             room_close(data.id);
         });
+
+        socket.on('/result/join', action_join_room_callback);
 
         vj.ajax({
 

@@ -74,7 +74,7 @@ onClientLeaveRoom = (data) ->
         rec.socket.emit '/room/user/leave', {uid: uid, nick: nick}
 
     if Room.Info[id].Players.length is 0
-        
+
         # No one in the room
 
         Room.Info[id] = null
@@ -141,7 +141,7 @@ controller_goroom = (data) ->
 
     socket = @
     Room.Join socket, data.id, (err) ->
-        socket.emit '/result/join', err
+        socket.emit '/result/join', {err: err, rid: data.id}
 
 ClientLeaveHandlers.room = onClientLeaveRoom
 ServerReadyHandlers.push onServerReady
