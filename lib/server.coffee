@@ -68,7 +68,8 @@ Server = global.Server =
 
     ClientEnter: (socket, action, data) ->
 
-        if  socket._action? && ClientLeaveHandlers[socket._action]?
+        if socket._action? && ClientLeaveHandlers[socket._action]?
+            console.log socket._action
             ClientLeaveHandlers[socket._action].call socket, socket._data
 
         socket._action = action

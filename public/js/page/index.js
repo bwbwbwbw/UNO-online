@@ -65,6 +65,8 @@
                 {
                     room_join(d.players[i].uid, d.players[i].nick);
                 }
+
+                $('.module-room-users .li').eq(0).addClass('highlight');
             }
 
         });
@@ -107,6 +109,7 @@
         $user.fadeOut(200, function()
         {
             $(this).remove();
+            $('.module-room-users .li').removeClass('highlight').eq(0).addClass('highlight');
         });
     }
 
@@ -238,6 +241,16 @@
         socket.on('/room/close', function(data)
         {
             room_close(data.id);
+        });
+
+        socket.on('/room/user/join', function(data)
+        {
+            room_join(data.uid, data.nick);
+        });
+
+        socket.on('/room/user/leave', function(data)
+        {
+            room_leave(data.uid);
         });
 
         socket.on('/result/join', action_join_room_callback);

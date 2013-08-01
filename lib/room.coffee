@@ -31,18 +31,18 @@ Room = global.Room =
             return
 
         if Room.Info[id].Started
-            callback '游戏已经开始了，您不能加入这个房间'
+            callback '游戏已经开始了，您不能加入这个房间 ㄟ( ▔, ▔ )ㄏ'
             return
 
         if Room.Info[id].Players.length is Room.Info[id].Max
-            callback '房间已经人满了，您不能加入这个房间'
+            callback '房间已经人满了，您不能加入这个房间 (￣▽￣)'
             return
 
         uid = socket.handshake.session.data._id.toString()
 
         for rec in Room.Info[id].Players
             if rec.uid is uid
-                callback '您已经加入这个房间，不能再次加入'
+                callback '您已经加入这个房间，不能再次加入 ╮(╯▽╰)╭'
                 return
 
         # Broadcast join message
@@ -65,7 +65,7 @@ onClientLeaveRoom = (data) ->
     uid = socket.handshake.session.data._id.toString()
     nick = socket.handshake.session.data.nick
 
-    for rec, index in Room.Info[id].Players
+    for rec, index in Room.Info[id].Players by -1
         if rec.uid is uid
             Room.Info[id].Players.splice index, 1
             # break
