@@ -45,11 +45,13 @@ Room = global.Room =
                 callback '您已经加入这个房间，不能再次加入'
                 return
 
-        Server.ClientEnter socket, 'room', {id: id}
-        Room.Info[id].Players.push {socket: socket, uid: uid, nick: UID2Nick[uid]}
-
+        # Broadcast join message
         for rec in Room.Info[id].Players
             rec.socket.emit '/room/user/join', {uid: uid, nick: UID2Nick[uid]}
+
+        # Client join
+        Server.ClientEnter socket, 'room', {id: id}
+        Room.Info[id].Players.push {socket: socket, uid: uid, nick: UID2Nick[uid]}
 
         Server.io.sockets.emit '/room/update', {id: id, current: Room.Info[id].Players.length, started: Room.Info[id].Started}
 
@@ -71,9 +73,9 @@ onClientLeaveRoom = (data) ->
     for rec in Room.Info[id].Players
         rec.socket.emit '/room/user/leave', {uid: uid, nick: nick}
 
-    # No one in the room
-
     if Room.Info[id].Players.length is 0
+        
+        # No one in the room
 
         Room.Info[id] = null
         delete Room.Info[id]
@@ -88,12 +90,32 @@ onServerReady = ->
 
     app = @
     app.post '/ajax/room/create', controller_room_create
+    app.post '/ajax/room/detail', controller_room_detail
     app.post '/ajax/rooms', controller_rooms
 
 controller_rooms = (req, res) ->
 
     ret = []
     ret.push {id: id, name: room.Name, max: room.Max, current: room.Players.length, started: room.Started} for id, room of Room.Info
+
+    res.write JSON.stringify ret
+    res.end()
+
+controller_room_detail = (req, res) ->
+
+    id = req.body.id
+
+    players = []
+    for player in Room.Info[id].Players
+        players.push {uid: player.uid, nick: player.nick}
+
+    ret = 
+        id: id
+        name: Room.Info[id].Name
+        max: Room.Info[id].Max
+        current: Room.Info[id].Players.length
+        started: Room.Info[id].Started
+        players: players
 
     res.write JSON.stringify ret
     res.end()

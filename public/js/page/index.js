@@ -11,18 +11,32 @@
 
         _socket.emit('/action/go/room', {id: rid});
 
-        //Clear
-        $('.page-room').html(TEMPLATE_PAGE_ROOM);
+        //Clear and initialize
+        //==================================================
 
-        $('.page-index').fadeOut(500, function()
-        {
+        var $room = $('.page-room');
+        $room.html(TEMPLATE_PAGE_ROOM);
 
-            $('.page-room').fadeIn(500);
-            $splash.fadeOut(500, function()
+        vj.ajax({
+
+            action: 'room/detail',
+            data:   {id: rid},
+
+            onSuccess: function(d)
             {
-                $(this).remove();
-            });
+                $room.find('.role-room-title').text(d.name);
+            }
 
+        });
+
+        //==================================================
+
+        $('.page-index').hide();
+
+        $('.page-room').fadeIn(500);
+        $splash.fadeOut(500, function()
+        {
+            $(this).remove();
         });
     }
 
