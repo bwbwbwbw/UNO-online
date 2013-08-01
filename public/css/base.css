@@ -593,6 +593,10 @@ a:focus {
 .page-room {
   display: none;
 }
+.page-room .role-room-title .button {
+  vertical-align: middle;
+  margin-left: 10px;
+}
 .page-right {
   width: 180px;
   float: right;
@@ -621,17 +625,31 @@ a:focus {
   color: #666;
   line-height: 1.8em;
 }
-.module-online-users .li {
+.module-online-users .module-content,
+.module-room-users .module-content {
+  padding-left: 10px;
+}
+.module-online-users .li,
+.module-room-users .li {
   font-size: 0.9em;
   color: #666;
-  line-height: 1.8em;
-  margin-left: 15px;
+  padding: 8px;
+}
+.module-online-users .li:hover,
+.module-room-users .li:hover {
+  background: rgba(255,0,0,0.05);
+  color: #333;
+}
+.module-online-users .li.highlight,
+.module-room-users .li.highlight {
+  background: rgba(255,0,0,0.5);
+  color: #fff;
 }
 .module-rooms .li {
   padding: 0 10px;
   margin-bottom: 10px;
   border: 1px solid #fff;
-  background: #ffecec;
+  background: rgba(255,200,200,0.3);
   -webkit-transition: background-color 0.2s linear, border-color 0.2s linear;
   -moz-transition: background-color 0.2s linear, border-color 0.2s linear;
   -ie-transition: background-color 0.2s linear, border-color 0.2s linear;

@@ -290,6 +290,11 @@ body
     
     display         none
 
+    .role-room-title .button
+        vertical-align  middle
+        margin-left     10px
+
+
 $right-width = 180
 
 .page-right
@@ -320,13 +325,23 @@ $right-width = 180
         color       #666
         line-height 1.8em
 
-.module-online-users
-
+.module-online-users,
+.module-room-users
+    
+    .module-content
+        padding-left 10px
+    
     .li
         font-size   0.9em
         color       #666
-        line-height 1.8em
-        margin-left 15px
+        padding     8px
+    .li:hover
+        background  rgba(255,0,0,0.05)
+        color       #333
+    .li.highlight
+        background  rgba(255,0,0,0.5)
+        color       #FFF
+
 
 .module-rooms
 
@@ -334,7 +349,7 @@ $right-width = 180
         padding     0 10px
         margin-bottom 10px
         border      1px solid #FFF
-        background  #FFECEC
+        background  rgba(255,200,200,0.3)
         transition  background-color .2s linear, border-color .2s linear
         line-height 40px
         cursor      pointer
