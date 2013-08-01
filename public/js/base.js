@@ -4,7 +4,7 @@
 
     if (info.logined)
     {
-        var socket = null;
+        var socket = window._socket = null;
 
         $(document).ready(function()
         {
@@ -16,6 +16,16 @@
                 for (var i in SocketIOReadyHandlers)
                 {
                     SocketIOReadyHandlers[i].call(socket);
+                }
+
+                var splash = $('#jSplash');
+
+                if (splash.length > 0)
+                {
+                    splash.fadeOut(1000, function()
+                    {
+                        $(this).remove();
+                    });
                 }
 
             });

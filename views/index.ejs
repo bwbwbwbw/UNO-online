@@ -1,9 +1,27 @@
 <script type="text/javascript" src="/js/page/index.js"></script>
-<div class="main-block page-index">
+<div class="main-block">
+<div class="page-loading">
+    <div id="jSplash">
+        <div id="ball"></div>
+        <div id="ball-0"></div>
+        <div id="ball-1"></div>
+    </div>
+</div>
+<div class="page-index">
     <div class="page-left"><div class="left-wrap">
 
-        <div><input type="button" class="button" value="创建房间"></div>
-    
+        <div class="role-create-room"><input type="button" class="button role-show-create-room" value="创建房间">
+        <div class="role-create-room-wrapper">
+            <label>房间名: </label><input type="text" class="textbox role-create-room-name"> <label>最大人数: </label><input type="text" class="textbox role-create-room-max" value="10"> <input type="button" class="button button-def role-create-room-button" value="创建">
+        </div>
+        </div>
+
+        <div class="module module-rooms">
+            <div class="module-content">
+            
+            </div>
+        </div>
+        
     </div></div>
     <div class="page-right">
         
@@ -23,4 +41,8 @@
 
     </div>
     <div class="clear"></div>
+</div>
+<div class="page-room">
+    
+</div>
 </div>
