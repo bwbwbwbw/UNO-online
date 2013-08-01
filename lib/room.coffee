@@ -64,8 +64,7 @@ Room = global.Room =
         Room.Info[id].Started = true
         Server.io.sockets.emit '/room/update', {id: id, current: Room.Info[id].Players.length, max: Room.Info[id].Max, started: Room.Info[id].Started}
 
-        for player in Room.Info[id].Players
-            player.socket.emit '/room/started'
+        Game.Start id
 
 onClientLeaveRoom = (data) ->
 
@@ -126,7 +125,7 @@ controller_room_start = (req, res) ->
         res.end()
 
     if Room.Info[rid].Started
-        res.write JSON.stringify {errorMsg: '游戏已经开始了啊 0.0', succeeded: false}
+        res.write JSON.stringify {errorMsg: '游戏已经开始了 0.0 乃在做什么', succeeded: false}
         res.end()
 
     Room.Start rid

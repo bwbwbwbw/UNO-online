@@ -13,6 +13,7 @@ require './lib/server.coffee'
 
 require './lib/user.coffee'
 require './lib/room.coffee'
+require './lib/game.coffee'
 
 global.logs = []
 global.log = (msg) ->
@@ -32,3 +33,4 @@ Database.Initialize()
 Server.Initialize()
 
 Room.Initialize()
+Game.Initialize()

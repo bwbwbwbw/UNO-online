@@ -341,6 +341,20 @@
 
             })
         });
+    
+    /*
+    var colors = 'green red yello blue'.split(' ');
+    var numbers = '1 2 3 4 5 6 7 8 9 0 empty forbid reverse plus2'.split(' ');
+
+    for (var c in colors)
+    {
+        for (var n in numbers)
+        {
+            $('body').append('<div class="card card-' + colors[c] + '-' + numbers[n] + '">' + colors[c] + '-' + numbers[n] + '</div>');
+        }
+    }
+    */
+    
     });
 
 })(window);

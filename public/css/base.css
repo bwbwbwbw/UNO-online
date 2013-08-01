@@ -676,6 +676,214 @@ a:focus {
 .module-rooms .li .max {
   float: right;
 }
+.preloader {
+  display: none;
+}
+.preloader .item0 {
+  background: url("../img/cards.png");
+}
+.card {
+  background: url("../img/cards.png") no-repeat;
+  width: 140px;
+  height: 200px;
+  box-shadow: 0 0 10px #000;
+  border-radius: 10px;
+}
+.card-green-1 {
+  background-position: 0px 0px;
+}
+.card-green-2 {
+  background-position: -140px 0px;
+}
+.card-green-3 {
+  background-position: -280px 0px;
+}
+.card-green-4 {
+  background-position: -420px 0px;
+}
+.card-green-5 {
+  background-position: -560px 0px;
+}
+.card-green-6 {
+  background-position: -700px 0px;
+}
+.card-green-7 {
+  background-position: -840px 0px;
+}
+.card-green-8 {
+  background-position: -980px 0px;
+}
+.card-green-9 {
+  background-position: -1120px 0px;
+}
+.card-green-0 {
+  background-position: -1260px 0px;
+}
+.card-green-empty {
+  background-position: -1400px 0px;
+}
+.card-green-forbid {
+  background-position: -1540px 0px;
+}
+.card-green-reverse {
+  background-position: -1680px 0px;
+}
+.card-green-plus2 {
+  background-position: -1820px 0px;
+}
+.card-red-1 {
+  background-position: 0px -200px;
+}
+.card-red-2 {
+  background-position: -140px -200px;
+}
+.card-red-3 {
+  background-position: -280px -200px;
+}
+.card-red-4 {
+  background-position: -420px -200px;
+}
+.card-red-5 {
+  background-position: -560px -200px;
+}
+.card-red-6 {
+  background-position: -700px -200px;
+}
+.card-red-7 {
+  background-position: -840px -200px;
+}
+.card-red-8 {
+  background-position: -980px -200px;
+}
+.card-red-9 {
+  background-position: -1120px -200px;
+}
+.card-red-0 {
+  background-position: -1260px -200px;
+}
+.card-red-empty {
+  background-position: -1400px -200px;
+}
+.card-red-forbid {
+  background-position: -1540px -200px;
+}
+.card-red-reverse {
+  background-position: -1680px -200px;
+}
+.card-red-plus2 {
+  background-position: -1820px -200px;
+}
+.card-yello-1 {
+  background-position: 0px -400px;
+}
+.card-yello-2 {
+  background-position: -140px -400px;
+}
+.card-yello-3 {
+  background-position: -280px -400px;
+}
+.card-yello-4 {
+  background-position: -420px -400px;
+}
+.card-yello-5 {
+  background-position: -560px -400px;
+}
+.card-yello-6 {
+  background-position: -700px -400px;
+}
+.card-yello-7 {
+  background-position: -840px -400px;
+}
+.card-yello-8 {
+  background-position: -980px -400px;
+}
+.card-yello-9 {
+  background-position: -1120px -400px;
+}
+.card-yello-0 {
+  background-position: -1260px -400px;
+}
+.card-yello-empty {
+  background-position: -1400px -400px;
+}
+.card-yello-forbid {
+  background-position: -1540px -400px;
+}
+.card-yello-reverse {
+  background-position: -1680px -400px;
+}
+.card-yello-plus2 {
+  background-position: -1820px -400px;
+}
+.card-blue-1 {
+  background-position: 0px -600px;
+}
+.card-blue-2 {
+  background-position: -140px -600px;
+}
+.card-blue-3 {
+  background-position: -280px -600px;
+}
+.card-blue-4 {
+  background-position: -420px -600px;
+}
+.card-blue-5 {
+  background-position: -560px -600px;
+}
+.card-blue-6 {
+  background-position: -700px -600px;
+}
+.card-blue-7 {
+  background-position: -840px -600px;
+}
+.card-blue-8 {
+  background-position: -980px -600px;
+}
+.card-blue-9 {
+  background-position: -1120px -600px;
+}
+.card-blue-0 {
+  background-position: -1260px -600px;
+}
+.card-blue-empty {
+  background-position: -1400px -600px;
+}
+.card-blue-forbid {
+  background-position: -1540px -600px;
+}
+.card-blue-reverse {
+  background-position: -1680px -600px;
+}
+.card-blue-plus2 {
+  background-position: -1820px -600px;
+}
+.card-null-changecolor {
+  background-position: 0px -800px;
+}
+.card-null-plus4 {
+  background-position: -140px -800px;
+}
+.stage-card-area {
+  height: 300px;
+  position: relative;
+}
+.stage-card-mine {
+  overflow-x: auto;
+  overflow-y: visible;
+  position: relative;
+  height: 250px;
+}
+.stage-card-mine .card {
+  top: 30px;
+  position: absolute;
+  -webkit-transition: left 0.3s ease-in-out, top 0.1s ease-in-out, opacity 0.3s ease-in-out;
+  -moz-transition: left 0.3s ease-in-out, top 0.1s ease-in-out, opacity 0.3s ease-in-out;
+  -ie-transition: left 0.3s ease-in-out, top 0.1s ease-in-out, opacity 0.3s ease-in-out;
+  transition: left 0.3s ease-in-out, top 0.1s ease-in-out, opacity 0.3s ease-in-out;
+}
+.stage-card-mine .card:hover {
+  top: 20px;
+}
 @-moz-keyframes jump {
   0% {
     top: 0;

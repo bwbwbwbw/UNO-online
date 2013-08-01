@@ -370,3 +370,51 @@ $right-width = 180
 
     .li .max
         float       right
+
+
+.preloader
+    display     none
+
+.preloader .item0
+    background  url(../img/cards.png)
+
+
+// Generate cards
+.card
+    background  url(../img/cards.png) no-repeat
+    width       140px
+    height      200px
+    box-shadow  0 0 10px #000
+    border-radius 10px
+
+$card-colors = 'green' 'red' 'yello' 'blue'
+$card-numbers = '1' '2' '3' '4' '5' '6' '7' '8' '9' '0' 'empty' 'forbid' 'reverse' 'plus2'
+
+for $color, $i in $card-colors
+    for $number, $j in $card-numbers
+        .card-{$color}-{$number}
+            background-position     -140px*$j   -200px*$i
+
+.card-null-changecolor
+    background-position 0px -800px
+.card-null-plus4
+    background-position -140px -800px
+
+
+.stage-card-area
+    height      300px
+    position    relative
+
+.stage-card-mine
+    overflow-x  auto
+    overflow-y  visible
+    position    relative
+    height      250px
+
+.stage-card-mine .card
+    top         30px
+    position    absolute
+    transition  left .3s ease-in-out, top .1s ease-in-out, opacity .3s ease-in-out
+
+.stage-card-mine .card:hover
+    top         20px
