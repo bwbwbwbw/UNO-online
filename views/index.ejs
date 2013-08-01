@@ -33,7 +33,7 @@
         </div>
 
         <div class="module module-online-users">
-            <div class="module-title">在线用户</div>
+            <div class="module-title">在线玩家</div>
             <div class="module-content">
 
             </div>
@@ -43,6 +43,28 @@
     <div class="clear"></div>
 </div>
 <div class="page-room">
-    
+    <div class="page-left"><div class="left-wrap">
+
+        
+        
+    </div></div>
+    <div class="page-right">
+        
+        <div class="module module-profile">
+            <div class="module-content">
+            <div class="nick"><%= request.session.nick %></div>
+            <div class="score">获胜：<%= request.session.data.win %>，失败：<%= request.session.data.lost %></div>
+            </div>
+        </div>
+
+        <div class="module module-room-users">
+            <div class="module-title">房间玩家</div>
+            <div class="module-content">
+
+            </div>
+        </div>
+
+    </div>
+    <div class="clear"></div>
 </div>
 </div>

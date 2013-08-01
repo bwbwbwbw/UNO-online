@@ -69,7 +69,7 @@ Server = global.Server =
     ClientEnter: (socket, action, data) ->
 
         if  socket._action? && ClientLeaveHandlers[socket._action]?
-            ClientLeaveHandlers[socket._action].call socket, data
+            ClientLeaveHandlers[socket._action].call socket, socket._data
 
         socket._action = action
         socket._data = data

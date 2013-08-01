@@ -13,7 +13,7 @@
 
         //Clear
         $('.page-room').html(TEMPLATE_PAGE_ROOM);
-        
+
         $('.page-index').fadeOut(500, function()
         {
 
@@ -53,6 +53,10 @@
         if (started)
             $li.addClass('disabled');
 
+        $li.click(function()
+        {
+            action_join_room(rid);
+        });
         $li.hide().appendTo('.module-rooms .module-content');
 
         setTimeout(function()
