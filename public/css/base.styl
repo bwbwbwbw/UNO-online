@@ -452,6 +452,12 @@ for $color, $i in $card-colors
     position    absolute
     opacity     0.9
     transition  left .3s ease-in-out, top .1s ease-in-out, opacity .3s ease-in-out
+    .card
+        transition opacity .2s linear
+.stage-card-mine .card-wrapper.invalid
+    background  #000
+    .card
+        opacity 0.6
 .stage-card-mine .card-wrapper.hide
     left        0
     opacity     0
@@ -517,7 +523,7 @@ for $color, $i in $card-colors
     z-index     99999
 .turn-indicator.show
     opacity     1
-    top         30px
+    top         10px
 
 
 //========================================================//

@@ -953,6 +953,18 @@ a:focus {
   -ie-transition: left 0.3s ease-in-out, top 0.1s ease-in-out, opacity 0.3s ease-in-out;
   transition: left 0.3s ease-in-out, top 0.1s ease-in-out, opacity 0.3s ease-in-out;
 }
+.stage-card-mine .card-wrapper .card {
+  -webkit-transition: opacity 0.2s linear;
+  -moz-transition: opacity 0.2s linear;
+  -ie-transition: opacity 0.2s linear;
+  transition: opacity 0.2s linear;
+}
+.stage-card-mine .card-wrapper.invalid {
+  background: #000;
+}
+.stage-card-mine .card-wrapper.invalid .card {
+  opacity: 0.6;
+}
 .stage-card-mine .card-wrapper.hide {
   left: 0;
   opacity: 0;
@@ -1039,7 +1051,7 @@ a:focus {
 }
 .turn-indicator.show {
   opacity: 1;
-  top: 30px;
+  top: 10px;
 }
 .notice-bar {
   position: absolute;

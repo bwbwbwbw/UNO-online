@@ -11,7 +11,9 @@
         {
             rid: rid,
             isOP: false,
-            isStarted: false
+            isStarted: false,
+            myTurn: false,
+            currentCard: null
         };
     }
 
@@ -154,6 +156,9 @@
 
     function eh_game_play(data)
     {
+        // Update
+        room_state.currentCard = {color: data.card.color, number: data.card.number};
+
         //忽略自己的出牌
         if (data.uid == info.uid)
             return;
@@ -396,12 +401,105 @@
 
         if (data.current_uid == info.uid)
         {
+            room_state.myTurn = true;
+
             var $d = $('<div class="turn-indicator">Your turn!</div>').appendTo('.page-room');
             setTimeout(function()
             {
                 $d.addClass('show');
             }, 0);
         }
+        else
+        {
+            room_state.myTurn = false;
+        }
+
+        console.log('update');
+        update_card_style();
+    }
+
+    function update_card_style()
+    {
+        $('.stage-card-mine .card-wrapper').each(function()
+        {
+            var color = $(this).attr('data-color');
+            var number = $(this).attr('data-number');
+
+            if (!card_can_play(color, number))
+                $(this).addClass('invalid').removeClass('valid');
+            else
+                $(this).removeClass('invalid').addClass('valid');
+        });
+    }
+
+    function card_can_play(color, number)
+    {
+        var canPlayCard = false;
+
+        if (room_state.currentCard == null)
+        {
+            // 第一局：只有第一个出牌的人可以出牌
+
+            if (!room_state.myTurn)
+            {
+                canPlayCard = false;
+            }
+            else
+            {
+                canPlayCard = true;
+            }
+        }
+        else
+        {
+            if (color == room_state.currentCard.color && number == room_state.currentCard.number)
+            {                
+                // 完全一致：可抢牌
+                canPlayCard = true;
+            }
+            else
+            {
+                if (!room_state.myTurn)
+                {
+                    // 非下一个玩家
+                    canPlayCard = false;
+                }
+                else
+                {
+                    // 判断花色
+                    if (number == 'plus4')
+                    {
+                        // 永远可+4
+                        canPlayCard = true;
+                    }
+                    else if (room_state.currentCard.number == 'plus2' && number == 'changecolor')
+                    {
+                        // 上一局是+2，本局不能换颜色
+                        canPlayCard = false;
+                    }
+                    else if (room_state.currentCard.number == 'plus4' && number == 'changecolor')
+                    {
+                        // 上一局是+4，本局不能换颜色
+                        canPlayCard = false;
+                    }
+                    else if (number == 'changecolor')
+                    {
+                        // 可换色
+                        canPlayCard = true;
+                    }
+                    else if (room_state.currentCard.number == number || room_state.currentCard.color == color)
+                    {
+                        // 颜色或花色一致，本局可出牌
+                        canPlayCard = true;
+                    }
+                    else
+                    {
+                        canPlayCard = false;
+                    }
+                }
+            }
+        }
+
+        return canPlayCard;
     }
 
     $(document).ready(function()
