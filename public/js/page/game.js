@@ -124,6 +124,61 @@
         var socket = this;
         socket.on('/game/start', eh_game_start);
         socket.on('/game/turn', eh_game_turn);
+        socket.on('/game/play', eh_game_play);
+    }
+
+    //清理牌区
+    function card_area_clear()
+    {
+
+        var rmList = [];
+
+        $('.stage-card-area .card-wrapper').css({left: 0, opacity: 0}).each(function()
+        {
+            var s = $(this);
+            rmList.push(s);
+        });
+
+        setTimeout(function()
+        {
+            for (var i in rmList)
+            {
+                rmList[i].remove();
+            }
+
+            rmList = null;
+
+        }, 1000);
+
+    }
+
+    function eh_game_play(data)
+    {
+        //忽略自己的出牌
+        if (data.uid == info.uid)
+            return;
+
+        card_area_clear();
+
+        var stage_width = $('.stage-card-area').width();
+        var start_x = stage_width / 2 - 30 * data.count; 
+
+        for (var i = 0; i < data.count; i++)
+        {
+            (function(i)
+            {
+
+                var card = $('<div class="card-wrapper" data-color="{color}" data-number="{number}"><div class="card card-{color}-{number}"></div></div>'.format(data.card));
+                card.css({left: stage_width, opacity: 0, top: 50});
+                card.appendTo('.stage-card-area');
+
+                setTimeout(function()
+                {
+                    card.css({left: start_x + i * 50, opacity: 1});
+                }, i * 50);
+
+            })(i);
+        }
     }
 
     function eh_game_start(data)
@@ -246,6 +301,8 @@
                     $('<div class="color color-' + colors[k] + '" data-color="' + colors[k] + '"></div>')
                     .click(function()
                     {
+                        selected.find('.card').attr('class', 'card card-' + $(this).attr('data-color') + '-' + number);
+
                         action_playcard($(this).attr('data-color'));
                         $selector.removeClass('show');
                         setTimeout(function()
@@ -287,6 +344,8 @@
                     var start_x = stage_width / 2 - 30 * count; 
 
                     //出牌成功
+                    card_area_clear();
+
                     $('.stage-card-mine .selected').each(function(index)
                     {
                         selected_card_id[$(this).attr('data-cardid')] = true;

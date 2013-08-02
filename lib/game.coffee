@@ -168,9 +168,9 @@ Game = global.Game =
 
                     # 判断花色
 
-                    if room.CurrentCard.number is 'plus2' and card.number is 'plus4'
+                    if card.number is 'plus4'
 
-                        # 上一局是+2，本局可+4
+                        # 永远可+4
                         canPlayCard = true
 
                     else if room.CurrentCard.number is 'plus2' and card.number is 'changecolor'
@@ -182,6 +182,11 @@ Game = global.Game =
 
                         # 上一局是+4，本局不能换颜色
                         canPlayCard = false
+
+                    else if card.number is 'changecolor'
+
+                        # 可换色
+                        canPlayCard = true
 
                     else if room.CurrentCard.number is card.number or room.CurrentCard.color is card.color
 
@@ -236,9 +241,9 @@ Game = global.Game =
 
         room.CurrentCard = { color: card.color, number: card.number }
 
-        # 广播
+        # 广播出牌信息
         for player in room.Players
-            player.socket.emit '/game/play', room.CurrentCard
+            player.socket.emit '/game/play', {card: room.CurrentCard, count: cardCount, extra: extra, uid: uid}
 
         # 是否获胜或UNO
 

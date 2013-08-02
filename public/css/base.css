@@ -770,6 +770,12 @@ a:focus {
 .card-green-plus2 {
   background-position: -1820px 0px;
 }
+.card-green-changecolor {
+  background-position: -1960px 0px;
+}
+.card-green-plus4 {
+  background-position: -2100px 0px;
+}
 .card-red-1 {
   background-position: 0px -200px;
 }
@@ -811,6 +817,12 @@ a:focus {
 }
 .card-red-plus2 {
   background-position: -1820px -200px;
+}
+.card-red-changecolor {
+  background-position: -1960px -200px;
+}
+.card-red-plus4 {
+  background-position: -2100px -200px;
 }
 .card-yello-1 {
   background-position: 0px -400px;
@@ -854,6 +866,12 @@ a:focus {
 .card-yello-plus2 {
   background-position: -1820px -400px;
 }
+.card-yello-changecolor {
+  background-position: -1960px -400px;
+}
+.card-yello-plus4 {
+  background-position: -2100px -400px;
+}
 .card-blue-1 {
   background-position: 0px -600px;
 }
@@ -896,6 +914,12 @@ a:focus {
 .card-blue-plus2 {
   background-position: -1820px -600px;
 }
+.card-blue-changecolor {
+  background-position: -1960px -600px;
+}
+.card-blue-plus4 {
+  background-position: -2100px -600px;
+}
 .card-null-changecolor {
   background-position: 0px -800px;
 }
@@ -915,10 +939,10 @@ a:focus {
 }
 .stage-card-area .card-wrapper {
   position: absolute;
-  -webkit-transition: left 0.5s ease-in-out, top 0.5s ease-in-out;
-  -moz-transition: left 0.5s ease-in-out, top 0.5s ease-in-out;
-  -ie-transition: left 0.5s ease-in-out, top 0.5s ease-in-out;
-  transition: left 0.5s ease-in-out, top 0.5s ease-in-out;
+  -webkit-transition: left 0.5s ease-in-out, top 0.5s ease-in-out, opacity 0.5s ease-in-out;
+  -moz-transition: left 0.5s ease-in-out, top 0.5s ease-in-out, opacity 0.5s ease-in-out;
+  -ie-transition: left 0.5s ease-in-out, top 0.5s ease-in-out, opacity 0.5s ease-in-out;
+  transition: left 0.5s ease-in-out, top 0.5s ease-in-out, opacity 0.5s ease-in-out;
 }
 .stage-card-mine .card-wrapper {
   top: 30px;
