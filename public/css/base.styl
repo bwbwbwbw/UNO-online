@@ -235,6 +235,7 @@ body
     box-shadow  0 0 30px rgba(0,0,0,0.2)
     min-height  500px
     border-radius 5px
+    position    relative
 
 
 .page-login
@@ -391,6 +392,8 @@ $right-width = 180
         float       right
 
 
+//========================================================//
+
 .preloader
     display     none
 
@@ -398,12 +401,18 @@ $right-width = 180
     background  url(../img/cards.png)
 
 
+//========================================================//
 // Generate cards
+
+.card-wrapper
+    width       140px
+    height      200px
+    box-shadow  0 0 10px #000
+    border-radius 10px
 .card
     background  url(../img/cards.png) no-repeat
     width       140px
     height      200px
-    box-shadow  0 0 10px #000
     border-radius 10px
 
 $card-colors = 'green' 'red' 'yello' 'blue'
@@ -419,10 +428,12 @@ for $color, $i in $card-colors
 .card-null-plus4
     background-position -140px -800px
 
+//========================================================//
 
 .stage-card-area
     height      300px
     position    relative
+    z-index     100
 
 .stage-card-mine
     overflow-x  auto
@@ -430,15 +441,28 @@ for $color, $i in $card-colors
     position    relative
     height      250px
 
-.stage-card-mine .card
+.stage-card-area .card-wrapper
+    position    absolute
+    transition  left .5s ease-in-out, top .5s ease-in-out
+
+//========================================================//
+
+.stage-card-mine .card-wrapper
     top         30px
     position    absolute
+    opacity     0.9
     transition  left .3s ease-in-out, top .1s ease-in-out, opacity .3s ease-in-out
-
-.stage-card-mine .card:hover
+.stage-card-mine .card-wrapper.hide
+    left        0
+    opacity     0
+.stage-card-mine .card-wrapper:hover
     top         20px
-.stage-card-mine .card.selected
+.stage-card-mine .card-wrapper.selected
     top         10px
+    opacity     1
+
+
+//========================================================//
 
 .turn-indicator
     width       500px
@@ -453,6 +477,33 @@ for $color, $i in $card-colors
     transition  all .5s ease-in-out
     text-align  center
     line-height 100px
+    z-index     99999
 .turn-indicator.show
     opacity     1
-    top         100px
+    top         30px
+
+
+//========================================================//
+
+.notice-bar
+    position    absolute
+    left        0
+    width       100%
+    bottom      -10px
+    height      50px
+    text-align  center
+    opacity     0
+    transition  opacity .2s ease-in-out, bottom .2s ease-in-out
+    z-index     99999
+.notice-bar.show
+    opacity     1
+    bottom      0
+.notice-content
+    display     inline-block
+    background  rgba(0,0,0,0.8);
+    color       #FFF
+    box-shadow  0 0 10px #000
+    padding     0 10px
+    line-height 40px
+    font-size   17px
+    border-radius 3px

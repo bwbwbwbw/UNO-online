@@ -149,8 +149,6 @@ Game = global.Game =
 
                 canPlayCard = true
 
-            console.log canPlayCard
-
         else
 
             if card.color is room.CurrentCard.color && card.number is room.CurrentCard.number
