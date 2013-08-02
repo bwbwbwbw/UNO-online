@@ -122,7 +122,7 @@ Game = global.Game =
 
         if card.number is 'changecolor' or card.number is 'plus4'
 
-            return '参数不正确：未知的新花色' if extra isnt 'green' and extra isnt 'blue' and extra isnt 'red' and extra isnt 'yello'
+            return '参数不正确：未知的新花色' if extra isnt 'green' && extra isnt 'blue' && extra isnt 'red' && extra isnt 'yello'
 
         cardAvailable = 0
 

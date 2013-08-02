@@ -189,8 +189,8 @@
         var color = $(this).attr('data-color');
         var number = $(this).attr('data-number');
 
-        //如果是+4、+2、禁，则默认不多选
-        if (number == 'plus2' || number == 'plus4' || number == 'forbid')
+        //如果是+4、+2、禁、换色，则默认不多选
+        if (number == 'plus2' || number == 'plus4' || number == 'forbid' || number == 'changecolor')
         {
             $(this).addClass('selected');
             return;
@@ -220,8 +220,11 @@
         });
     }
 
-    function action_playcard()
+    function action_playcard(extra)
     {
+        if ($('.color-select').length > 0 && extra == undefined)
+            return;
+
         var selected = $('.stage-card-mine .selected');
 
         if (room_state.isStarted && selected.length > 0)
@@ -231,10 +234,44 @@
             var number = selected.attr('data-number');
             var count = selected.length;
 
+            //弹窗给玩家选择颜色
+            if ((number == 'plus4' || number == 'changecolor') && extra == undefined)
+            {
+
+                var colors = ['red', 'green', 'yello', 'blue'];
+                var $selector = $('<div class="color-select"></div>');
+                
+                for (var k in colors)
+                {
+                    $('<div class="color color-' + colors[k] + '" data-color="' + colors[k] + '"></div>')
+                    .click(function()
+                    {
+                        action_playcard($(this).attr('data-color'));
+                        $selector.removeClass('show');
+                        setTimeout(function()
+                        {
+                            $selector.remove();
+                        }, 500);
+                    })
+                    .appendTo($selector);
+                }
+
+                $selector.appendTo('.page-room');
+                $selector.css({left: selected.position().left});
+
+                setTimeout(function()
+                {
+                    $selector.addClass('show');
+                }, 0);
+
+                return;
+
+            }
+
             vj.ajax({
 
                 action: 'game/play',
-                data:   {rid: room_state.rid, uid: info.uid, card: {color: color, number: number}, count: count, extea: null},
+                data:   {rid: room_state.rid, uid: info.uid, card: {color: color, number: number}, count: count, extra: extra},
                 onSuccess: function(d)
                 {
                     if (d !== true)
