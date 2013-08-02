@@ -336,7 +336,7 @@ onSocketIOReady = ->
 
 controller_playcard = (req, res) ->
 
-    result = Game.PlayCard req.body.rid, req.body.uid, req.body.card, req.body.count, req.body.extra
+    result = Game.PlayCard req.body.rid, req.session.uid, req.body.card, req.body.count, req.body.extra
 
     res.write JSON.stringify result
     res.end()

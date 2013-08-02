@@ -378,7 +378,7 @@
             vj.ajax({
 
                 action: 'game/play',
-                data:   {rid: room_state.rid, uid: info.uid, card: {color: color, number: number}, count: count, extra: extra},
+                data:   {rid: room_state.rid, card: {color: color, number: number}, count: count, extra: extra},
                 onSuccess: function(d)
                 {
                     if (d !== true)
