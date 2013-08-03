@@ -681,6 +681,19 @@ a:focus {
   background: rgba(255,0,0,0.9);
   opacity: 0.3;
 }
+.module-online-users .li .card-counter,
+.module-room-users .li .card-counter {
+  position: absolute;
+  height: 20px;
+  line-height: 20px;
+  margin-top: -10px;
+  top: 50%;
+  padding: 0 5px;
+  background: #fff;
+  border: 1px solid #ddd;
+  border-radius: 3px;
+  right: 0;
+}
 .module-rooms .li {
   padding: 0 10px;
   margin-bottom: 10px;

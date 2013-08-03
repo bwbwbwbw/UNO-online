@@ -99,6 +99,7 @@
         var $li = $('<div class="li" data-id="' + uid + '"></div>');
         $li.text(nick).hide().appendTo('.module-room-users .module-content');
         $li.append('<div class="indicator"></div>');
+        $li.append('<div class="card-counter"></div>');
 
         if (uid == info.uid)
             $li.addClass('highlightText');

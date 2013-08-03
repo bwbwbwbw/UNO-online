@@ -52,6 +52,9 @@
 
     function append_start_button()
     {
+        if (room_state.isStarted)
+            return;
+
         var $button = $('<input type="button" class="button button-def role-start-game" value="开始游戏 （*＾ワ＾*）">');
 
         $button.click(function()
@@ -112,8 +115,12 @@
 
     function noticebar_hide()
     {
+        if (last_notice_bar == null)
+            return;
+
         var bar = last_notice_bar;
-        bar.removeClass('show');
+        bar.removeClass('show')
+
         setTimeout(function()
         {
             bar.remove();
@@ -149,8 +156,12 @@
 
     function plusbar_hide()
     {
+        if (last_plus_bar == null)
+            return;
+
         var bar = last_plus_bar;
         bar.removeClass('show');
+
         setTimeout(function()
         {
             bar.remove();
@@ -380,8 +391,6 @@
             return;
         }
         
-        $('.stage-card-mine .selected').removeClass('selected');
-            
         //Select similar
         var color = $(this).attr('data-color');
         var number = $(this).attr('data-number');
@@ -393,12 +402,12 @@
             return;
         }
 
+        $('.stage-card-mine .selected').removeClass('selected');
         $('.stage-card-mine .card-wrapper').each(function()
         {
             if ($(this).attr('data-color') == color && $(this).attr('data-number') == number)
                 $(this).addClass('selected');
         });
-        
     }
 
     function rearrange_card_dom()
@@ -427,7 +436,7 @@
         }
 
         noticebar_hide();
-        
+
         vj.ajax({
 
             action: 'game/draw',
@@ -567,6 +576,12 @@
         $('.module-room-users .indicator').removeClass('current next');
         $('.module-room-users [data-id="{current_uid}"] .indicator'.format(data)).addClass('current');
         $('.module-room-users [data-id="{next_uid}"] .indicator'.format(data)).addClass('next');
+
+        for (var k in data.playerstatus)
+        {
+            var p = data.playerstatus[k];
+            $('.module-room-users [data-id="{uid}"] .card-counter'.format(p)).text(p.count);
+        }
 
         if (room_state.plus != data.plus)
         {

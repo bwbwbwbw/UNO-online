@@ -68,6 +68,7 @@ Game = global.Game =
                 next:           next_id
                 next_uid:       next_uid
                 plus:           room.CurrentPlus
+                playerstatus:   Game.GetPlayerStatus(rid)
             }
 
     RepeatCurrentTurn: (rid) ->
@@ -86,6 +87,7 @@ Game = global.Game =
                 next:           next_id
                 next_uid:       next_uid
                 plus:           room.CurrentPlus
+                playerstatus:   Game.GetPlayerStatus(rid)
             }
 
     NextTurn: (rid) ->
@@ -127,6 +129,7 @@ Game = global.Game =
                 next:           next_id
                 next_uid:       next_uid
                 plus:           room.CurrentPlus
+                playerstatus:   Game.GetPlayerStatus(rid)
             }
 
     GetPlayerByUid: (rid, uid) ->
@@ -140,6 +143,18 @@ Game = global.Game =
                 break
 
         player
+
+    GetPlayerStatus: (rid) ->
+
+        # Return players' surplus card count
+
+        room = Room.Info[rid]
+        ret = []
+
+        for _player in room.Players
+            ret.push { uid: _player.uid, count: _player.cards.length }
+
+        ret
 
     DrawCards: (rid, player, count) ->
 
@@ -157,13 +172,9 @@ Game = global.Game =
                 card = extend {}, CardMap[Math.floor(Math.random() * CardMap.length)]
                 player.cards.push card
 
-                console.log 'new card', player.nick, card
-
                 canPlayCard = Game.CanPlayCard rid, player.uid, card
 
         else
-
-            # console.log player.nick, count
 
             for i in [1..count]
 
@@ -342,8 +353,9 @@ Game = global.Game =
 
                     # UNO
 
-                    console.log 'UNO', rid, uid
-                    #Game.UNO rid, uid
+                    for player in room.Players
+                        player.socket.emit '/game/status/uno', {uid: _player.uid}
+
                     break
 
                 if _player.cards.length is 0
@@ -352,9 +364,11 @@ Game = global.Game =
 
                         # 获胜
 
-                        console.log 'WIN', rid, uid
-                        #Game.Win rid, uid
-                        break
+                        for player in room.Players
+                            player.socket.emit '/game/status/win', {uid: _player.uid}
+
+                        room.Started = false
+                        return
 
                     else
 
@@ -384,6 +398,11 @@ onSocketIOReady = ->
 
 controller_playcard = (req, res) ->
 
+    if not Room.Info[req.body.rid].Started
+        res.write JSON.stringify { errorMsg: '游戏还没开始 0.0', succeeded: false}
+        res.end()
+        return
+
     result = Game.PlayCard req.body.rid, req.session.uid, req.body.card, req.body.count, req.body.extra
 
     res.write JSON.stringify result
@@ -395,6 +414,11 @@ controller_drawcard = (req, res) ->
     rid = req.body.rid
 
     room = Room.Info[rid]
+    
+    if not room.Started
+        res.write JSON.stringify { errorMsg: '游戏还没开始 0.0', succeeded: false }
+        res.end()
+        return
 
     if room.CurrentUid isnt uid
 
@@ -416,7 +440,6 @@ controller_drawcard = (req, res) ->
         if plusType is 'plus2'
 
             # 如果是+2，则先摸n张牌，然后继续当前玩家
-            console.log 'RepeatCurrentTurn'
             Game.RepeatCurrentTurn rid
 
         else
