@@ -2,6 +2,8 @@ CardMap = []
 ColorMap = ['green', 'red', 'yello', 'blue']
 NumberMap = ['1', '2', '3', '4', '5', '6', '7', '8', '9', '0', 'empty', 'forbid', 'reverse', 'plus2']
 
+extend = require('util')._extend
+
 IsFunctional = {}
 
 Game = global.Game = 
@@ -39,10 +41,10 @@ Game = global.Game =
         # Randomize card
 
         for player in room.Players
+            
             player.cards = []
-            for i in [1..7]
-                player.cards.push CardMap[Math.floor(Math.random() * CardMap.length)]
-
+            Game.DrawCards rid, player, 7
+            
         # Randomize start person
 
         room.CurrentPlus = 0
@@ -58,12 +60,13 @@ Game = global.Game =
         next_uid = room.Players[next_id].uid
 
         for player in room.Players
-            player.socket.emit '/game/start', {cards: player.cards}
+            player.socket.emit '/game/start', {cards: extend {}, player.cards}
             player.socket.emit '/game/turn', {
                 current:        room.CurrentId
                 current_uid:    room.CurrentUid
                 next:           next_id
                 next_uid:       next_uid
+                plus:           room.CurrentPlus
             }
 
     NextTurn: (rid) ->
@@ -102,39 +105,52 @@ Game = global.Game =
                 current_uid:    room.CurrentUid
                 next:           next_id
                 next_uid:       next_uid
+                plus:           room.CurrentPlus
             }
 
-    PlayCard: (rid, uid, card, cardCount, extra) ->
+    GetPlayerByUid: (rid, uid) ->
 
+        player = null
         room = Room.Info[rid]
 
-        currentPlayer = null
         for _player in room.Players
             if _player.uid is uid
-                currentPlayer = _player
+                player = _player
                 break
 
-        return '参数不正确：用户不存在' if currentPlayer is null
+        player
 
-        # 检查参数
+    DrawCards: (rid, player, count) ->
 
-        return '参数不正确：cardCount不能小于1' if cardCount < 1
+        # count = (Integer): 增加指定数量的牌
+        # count = null: 增加直到玩家可以出牌
 
-        if card.number is 'changecolor' or card.number is 'plus4'
+        if count is null
 
-            return '参数不正确：未知的新花色' if extra isnt 'green' && extra isnt 'blue' && extra isnt 'red' && extra isnt 'yello'
+            canPlayCard = false
 
-        cardAvailable = 0
+            while not canPlayCard
 
-        # 是否拥有这张牌
+                # new card
 
-        for _card in currentPlayer.cards
-            if _card.color is card.color && _card.number is card.number
-                cardAvailable++
+                card = extend {}, CardMap[Math.floor(Math.random() * CardMap.length)]
+                player.cards.push card
 
-        return '您没有足够的牌' if cardAvailable < cardCount
+                canPlayCard = Game.CanPlayCard rid, player.uid, card
 
-        # 是否可出牌
+        else
+
+            # console.log player.nick, count
+
+            for i in [1..count]
+
+                card = extend {}, CardMap[Math.floor(Math.random() * CardMap.length)]
+                player.cards.push card
+
+
+    CanPlayCard: (rid, uid, card) ->
+
+        room = Room.Info[rid]
 
         canPlayCard = false
 
@@ -197,7 +213,35 @@ Game = global.Game =
 
                         canPlayCard = false
 
-        return '您当前不能出这个牌' if not canPlayCard
+        canPlayCard
+
+
+    PlayCard: (rid, uid, card, cardCount, extra) ->
+
+        room = Room.Info[rid]
+        currentPlayer = Game.GetPlayerByUid rid, uid
+
+        return '参数不正确：用户不存在' if currentPlayer is null
+
+        # 检查参数
+
+        return '参数不正确：cardCount不能小于1' if cardCount < 1
+
+        if card.number is 'changecolor' or card.number is 'plus4'
+
+            return '参数不正确：未知的新花色' if extra isnt 'green' && extra isnt 'blue' && extra isnt 'red' && extra isnt 'yello'
+
+        cardAvailable = 0
+
+        # 是否拥有这张牌
+
+        for _card in currentPlayer.cards
+            if _card.color is card.color && _card.number is card.number
+                cardAvailable++
+
+        return '您没有足够的牌' if cardAvailable < cardCount
+
+        return '您当前不能出这个牌' if not Game.CanPlayCard rid, uid, card
 
         # 出牌阶段
 
@@ -239,7 +283,7 @@ Game = global.Game =
 
         # 更新牌
 
-        room.CurrentCard = { color: card.color, number: card.number }
+        room.CurrentCard = extend {}, card
 
         # 广播出牌信息
         for player in room.Players
@@ -268,8 +312,7 @@ Game = global.Game =
 
                     # 需要补牌 * 2
                     
-                    for i in [1..2]
-                        currentPlayer.cards.push CardMap[Math.floor(Math.random() * CardMap.length)]
+                    Game.DrawCards rid, currentPlayer, 2
                     
                     currentPlayer.socket.emit '/game/card/updated', {cards: currentPlayer.cards}
                     

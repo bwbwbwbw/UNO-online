@@ -13,7 +13,8 @@
             isOP: false,
             isStarted: false,
             myTurn: false,
-            currentCard: null
+            currentCard: null,
+            plus: 0
         };
     }
 
@@ -79,8 +80,7 @@
 
     //==========================================
 
-    var hide_timeout = null;
-
+    var noticebar_hide_timeout = null;
     var last_notice_bar;
 
     function noticebar_show(content)
@@ -90,9 +90,9 @@
 
         $b.find('.notice-content').text(content);
 
-        if (hide_timeout != null)
+        if (noticebar_hide_timeout != null)
         {
-            clearTimeout(hide_timeout);
+            clearTimeout(noticebar_hide_timeout);
             noticebar_hide();
         }
 
@@ -103,7 +103,7 @@
 
         last_notice_bar = $b;
 
-        hide_timeout = setTimeout(noticebar_hide, 1000);
+        noticebar_hide_timeout = setTimeout(noticebar_hide, 1000);
     }
 
     function noticebar_hide()
@@ -115,10 +115,55 @@
             bar.remove();
             bar = null;
         }, 1000);
+
+        noticebar_hide_timeout = null;
     }
 
     //==========================================
 
+    //==========================================
+
+    var plusbar_hide_timeout = null;
+    var last_plus_bar;
+
+    function plusbar_show(content)
+    {
+        var $b = $('<div class="plus-bar"></div>');
+        $b.prependTo('.page-room');
+
+        $b.text(content);
+
+        if (plusbar_hide_timeout != null)
+        {
+            clearTimeout(plusbar_hide_timeout);
+            plusbar_hide();
+        }
+
+        setTimeout(function()
+        {
+            $b.addClass('show');
+        });
+
+        last_plus_bar = $b;
+
+        plusbar_hide_timeout = setTimeout(plusbar_hide, 1000);
+    }
+
+    function plusbar_hide()
+    {
+        var bar = last_plus_bar;
+        bar.removeClass('show');
+        setTimeout(function()
+        {
+            bar.remove();
+            bar = null;
+        }, 1000);
+
+        plusbar_hide_timeout = null;
+    }
+
+    //==========================================
+    
     var cards;
 
     function gameHandler()
@@ -398,6 +443,11 @@
         $('.module-room-users .indicator').removeClass('current next');
         $('.module-room-users [data-id="{current_uid}"] .indicator'.format(data)).addClass('current');
         $('.module-room-users [data-id="{next_uid}"] .indicator'.format(data)).addClass('next');
+
+        if (room_state.plus != data.plus)
+        {
+            update_plus(data.plus);
+        }
 
         if (data.current_uid == info.uid)
         {
