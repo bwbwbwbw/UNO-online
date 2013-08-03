@@ -338,12 +338,13 @@ $right-width = 180
         padding     8px
         position    relative
         pointer-events none
+        transition  background-color .3s linear, color .3s linear
     .li:hover
         background  rgba(255,0,0,0.05)
         color       #333
     .li.highlight
         background  rgba(255,0,0,0.5)
-        color       #FFF
+        color       #FFF!important
     .li.highlightText
         color       #F00
     .li .indicator
@@ -371,7 +372,7 @@ $right-width = 180
         background  #FFF
         border      1px solid #DDD
         border-radius 3px
-        right       0
+        right       3px
 
 .module-rooms
 

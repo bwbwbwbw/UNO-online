@@ -182,6 +182,50 @@
         socket.on('/game/turn', eh_game_turn);
         socket.on('/game/play', eh_game_play);
         socket.on('/game/card/updated', eh_game_card_update);
+        socket.on('/game/status/uno', eh_game_status_uno);
+        socket.on('/game/status/win', eh_game_status_win);
+    }
+
+    function eh_game_status_uno(data)
+    {
+        var $user = $('.module-room-users [data-id="{uid}"]'.format(data));
+        $user.addClass('highlight');
+
+        setTimeout(function()
+        {
+            $user.removeClass('highlight');
+        }, 2000);
+    }
+
+    function eh_game_status_win(data)
+    {
+        var p = $('.turn-indicator').removeClass('show');
+        setTimeout(function()
+        {
+            p.remove();
+        }, 1000);
+
+        if (data.uid == info.uid)
+        {
+            //I'm win
+            var $d = $('<div class="turn-indicator">You win!</div>').appendTo('.page-room');
+        }
+        else
+        {
+            var $d = $('<div class="turn-indicator">You lost :(</div>').appendTo('.page-room');
+        }
+
+        $('.module-stage').empty().text('Winner is ' + data.nick);
+
+        setTimeout(function()
+        {
+            $d.addClass('show');
+        }, 0);
+
+        setTimeout(function()
+        {
+            window.location.reload();
+        }, 3000);
     }
 
     function eh_game_card_update(newcards)

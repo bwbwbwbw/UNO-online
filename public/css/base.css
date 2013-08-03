@@ -642,6 +642,10 @@ a:focus {
   -moz-pointer-events: none;
   -ie-pointer-events: none;
   pointer-events: none;
+  -webkit-transition: background-color 0.3s linear, color 0.3s linear;
+  -moz-transition: background-color 0.3s linear, color 0.3s linear;
+  -ie-transition: background-color 0.3s linear, color 0.3s linear;
+  transition: background-color 0.3s linear, color 0.3s linear;
 }
 .module-online-users .li:hover,
 .module-room-users .li:hover {
@@ -651,7 +655,7 @@ a:focus {
 .module-online-users .li.highlight,
 .module-room-users .li.highlight {
   background: rgba(255,0,0,0.5);
-  color: #fff;
+  color: #fff !important;
 }
 .module-online-users .li.highlightText,
 .module-room-users .li.highlightText {
@@ -692,7 +696,7 @@ a:focus {
   background: #fff;
   border: 1px solid #ddd;
   border-radius: 3px;
-  right: 0;
+  right: 3px;
 }
 .module-rooms .li {
   padding: 0 10px;

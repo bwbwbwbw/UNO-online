@@ -365,7 +365,7 @@ Game = global.Game =
                         # 获胜
 
                         for player in room.Players
-                            player.socket.emit '/game/status/win', {uid: _player.uid}
+                            player.socket.emit '/game/status/win', {uid: _player.uid, nick: _player.nick}
 
                         room.Started = false
                         return
