@@ -329,12 +329,27 @@ Game = global.Game =
 
         if card.number is 'reverse'
 
-            if not (cardCount % 2) is 0
+            # /////// bug here!? recheck needed
+            if (cardCount % 2) is 1
                 
                 if room.CurrentDirection is 1
                     room.CurrentDirection = -1
                 else
                     room.CurrentDirection = 1
+
+        # 有抢牌，则更新index
+        # /////// bug here!? recheck needed
+        
+        if room.CurrentUid isnt uid
+
+            for _player, i in room.Players
+                
+                if _player.uid is uid
+
+                    room.CurrentId = i
+                    break
+
+            room.CurrentUid = uid
 
         # 更新牌
 
