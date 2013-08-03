@@ -339,7 +339,7 @@ Game = global.Game =
 
         # 有抢牌，则更新index
         # /////// bug here!? recheck needed
-        
+
         if room.CurrentUid isnt uid
 
             for _player, i in room.Players
@@ -391,6 +391,10 @@ Game = global.Game =
                         
                         Game.DrawCards rid, currentPlayer, 2
                         currentPlayer.socket.emit '/game/card/updated', {cards: currentPlayer.cards}
+
+                        ps = Game.GetPlayerStatus(rid)
+                        for _player in room.Players
+                            _player.socket.emit '/game/playerstatus/update', { playerstatus: ps }
                         
                         break
 
@@ -451,6 +455,10 @@ controller_drawcard = (req, res) ->
         room.CurrentPlus = 0
         room.CurrentPlusType = null
         player.socket.emit '/game/card/updated', {cards: player.cards}
+        
+        ps = Game.GetPlayerStatus(rid)
+        for _player in room.Players
+            _player.socket.emit '/game/playerstatus/update', { playerstatus: ps }
 
         if plusType is 'plus2'
 
@@ -467,6 +475,10 @@ controller_drawcard = (req, res) ->
         # 否则，一直摸牌直到可以出牌
         Game.DrawCards rid, player
         player.socket.emit '/game/card/updated', {cards: player.cards}
+
+        ps = Game.GetPlayerStatus(rid)
+        for _player in room.Players
+            _player.socket.emit '/game/playerstatus/update', { playerstatus: ps }
 
     res.write JSON.stringify {}
     res.end()

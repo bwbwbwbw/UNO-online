@@ -182,8 +182,18 @@
         socket.on('/game/turn', eh_game_turn);
         socket.on('/game/play', eh_game_play);
         socket.on('/game/card/updated', eh_game_card_update);
+        socket.on('/game/playerstatus/update', eh_playestatus_update);
         socket.on('/game/status/uno', eh_game_status_uno);
         socket.on('/game/status/win', eh_game_status_win);
+    }
+
+    function eh_playestatus_update(data)
+    {
+        for (var k in data.playerstatus)
+        {
+            var p = data.playerstatus[k];
+            $('.module-room-users [data-id="{uid}"] .card-counter'.format(p)).text(p.count);
+        }
     }
 
     function eh_game_status_uno(data)
@@ -621,11 +631,7 @@
         $('.module-room-users [data-id="{current_uid}"] .indicator'.format(data)).addClass('current');
         $('.module-room-users [data-id="{next_uid}"] .indicator'.format(data)).addClass('next');
 
-        for (var k in data.playerstatus)
-        {
-            var p = data.playerstatus[k];
-            $('.module-room-users [data-id="{uid}"] .card-counter'.format(p)).text(p.count);
-        }
+        eh_playestatus_update(data);
 
         if (room_state.plus != data.plus)
         {
