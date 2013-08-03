@@ -133,7 +133,7 @@
     {
         if (last_plus_bar !== null)
             plusbar_hide();
-        
+
         var $b = $('<div class="plus-bar"></div>');
         $b.prependTo('.page-room');
 
@@ -262,7 +262,7 @@
         }, 0);
 
         rearrange_card_dom();
-        update_card_style();
+        update_card_style(false);
 
     }
 
@@ -426,6 +426,8 @@
             return;
         }
 
+        noticebar_hide();
+        
         vj.ajax({
 
             action: 'game/draw',
@@ -558,6 +560,8 @@
 
     function eh_game_turn(data)
     {
+        noticebar_hide();
+
         $('.turn-indicator').remove();
 
         $('.module-room-users .indicator').removeClass('current next');
@@ -598,8 +602,11 @@
         update_card_style();
     }
 
-    function update_card_style()
+    function update_card_style(showTip)
     {
+        if (showTip == undefined)
+            showTip = true;
+
         var validCount = 0;
 
         $('.stage-card-mine .card-wrapper').each(function()
@@ -618,11 +625,9 @@
             }
         });
 
-        if (validCount == 0 && room_state.myTurn)
+        if (showTip && validCount == 0 && room_state.myTurn)
         {
-
             noticebar_show('您已经无牌可出了。请等待其他玩家抢牌（如果存在），或按R来摸牌。', 5000);
-
         }
     }
 
