@@ -528,6 +528,20 @@ for $color, $i in $card-colors
 
 //========================================================//
 
+.plus-bar
+    position    absolute
+    left        20px
+    top         0px
+    font-size   50px
+    opacity     0
+    color       #00F
+    transition  opacity .4s ease-in-out, top .4s ease-in-out
+    z-index     99999
+.plus-bar.show
+    opacity     1
+    top         70px
+
+
 .notice-bar
     position    absolute
     left        0

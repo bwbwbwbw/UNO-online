@@ -51,7 +51,7 @@ Server = global.Server =
         #io.enable 'browser client minification'
         #io.enable 'browser client etag'
         #io.enable 'browser client gzip'
-        #io.set 'log level', 1
+        io.set 'log level', 1
         io.set 'transports', ['websocket', 'htmlfile', 'xhr-polling', 'jsonp-polling']
         io.set 'authorization', ioSession(express.cookieParser(Config.CookieSecret), memoryStore)
         io.sockets.on 'connection', io_socket_connect

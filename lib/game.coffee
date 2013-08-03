@@ -53,6 +53,7 @@ Game = global.Game =
         room.CurrentUid = room.Players[room.CurrentId].uid
         room.CurrentDirection = 1
         room.CurrentCard = null
+        room.CurrentLocked = false   # 如果已摸牌，则锁定
 
         next_id = room.CurrentId + room.CurrentDirection
         next_id = room.Players.length - 1 if next_id < 0
@@ -60,7 +61,25 @@ Game = global.Game =
         next_uid = room.Players[next_id].uid
 
         for player in room.Players
-            player.socket.emit '/game/start', {cards: extend {}, player.cards}
+            player.socket.emit '/game/start', {cards: player.cards}
+            player.socket.emit '/game/turn', {
+                current:        room.CurrentId
+                current_uid:    room.CurrentUid
+                next:           next_id
+                next_uid:       next_uid
+                plus:           room.CurrentPlus
+            }
+
+    RepeatCurrentTurn: (rid) ->
+
+        room = Room.Info[rid]
+
+        next_id = room.CurrentId + room.CurrentDirection
+        next_id = room.Players.length - 1 if next_id < 0
+        next_id = 0 if next_id >= room.Players.length
+        next_uid = room.Players[next_id].uid
+
+        for player in room.Players
             player.socket.emit '/game/turn', {
                 current:        room.CurrentId
                 current_uid:    room.CurrentUid
@@ -80,6 +99,8 @@ Game = global.Game =
 
         room.CurrentId = current_id
         room.CurrentUid = current_uid
+
+        room.CurrentLocked = false  # clear locks
 
         ################################################
         # If forbid: next
@@ -123,9 +144,9 @@ Game = global.Game =
     DrawCards: (rid, player, count) ->
 
         # count = (Integer): 增加指定数量的牌
-        # count = null: 增加直到玩家可以出牌
+        # count = undefined: 增加直到玩家可以出牌
 
-        if count is null
+        if not count?
 
             canPlayCard = false
 
@@ -135,6 +156,8 @@ Game = global.Game =
 
                 card = extend {}, CardMap[Math.floor(Math.random() * CardMap.length)]
                 player.cards.push card
+
+                console.log 'new card', player.nick, card
 
                 canPlayCard = Game.CanPlayCard rid, player.uid, card
 
@@ -167,9 +190,9 @@ Game = global.Game =
 
         else
 
-            if card.color is room.CurrentCard.color && card.number is room.CurrentCard.number
+            if card.color is room.CurrentCard.color && card.number is room.CurrentCard.number && not room.CurrentLocked
                 
-                # 完全一致：可抢牌
+                # 完全一致且没有锁定：可抢牌
                 canPlayCard = true
 
             else
@@ -182,36 +205,54 @@ Game = global.Game =
 
                 else
 
-                    # 判断花色
+                    if room.CurrentPlus > 0
 
-                    if card.number is 'plus4'
+                        if card.number isnt 'plus2' && card.number isnt 'plus4'
 
-                        # 永远可+4
-                        canPlayCard = true
+                            canPlayCard = false
 
-                    else if room.CurrentCard.number is 'plus2' and card.number is 'changecolor'
+                        else
 
-                        # 上一局是+2，本局不能换颜色
-                        canPlayCard = false
+                            if room.CurrentCard.number is 'plus4' && card.number is 'plus2'
 
-                    else if room.CurrentCard.number is 'plus4' and card.number is 'changecolor'
+                                canPlayCard = false
 
-                        # 上一局是+4，本局不能换颜色
-                        canPlayCard = false
+                            else
 
-                    else if card.number is 'changecolor'
-
-                        # 可换色
-                        canPlayCard = true
-
-                    else if room.CurrentCard.number is card.number or room.CurrentCard.color is card.color
-
-                        # 颜色或花色一致，本局可出牌
-                        canPlayCard = true
+                                canPlayCard = true
 
                     else
 
-                        canPlayCard = false
+                        # 判断花色
+
+                        if card.number is 'plus4'
+
+                            # 永远可+4
+                            canPlayCard = true
+
+                        else if room.CurrentCard.number is 'plus2' and card.number is 'changecolor'
+
+                            # 上一局是+2，本局不能换颜色
+                            canPlayCard = false
+
+                        else if room.CurrentCard.number is 'plus4' and card.number is 'changecolor'
+
+                            # 上一局是+4，本局不能换颜色
+                            canPlayCard = false
+
+                        else if card.number is 'changecolor'
+
+                            # 可换色
+                            canPlayCard = true
+
+                        else if room.CurrentCard.number is card.number or room.CurrentCard.color is card.color
+
+                            # 颜色或花色一致，本局可出牌
+                            canPlayCard = true
+
+                        else
+
+                            canPlayCard = false
 
         canPlayCard
 
@@ -247,8 +288,11 @@ Game = global.Game =
 
         # 删除相应数量的牌
 
-        for _card in currentPlayer.cards
+        cardAvailable = cardCount
+
+        for _card, i in currentPlayer.cards by -1
             if _card.color is card.color && _card.number is card.number
+                currentPlayer.cards.splice i, 1
                 cardAvailable--
                 break if cardAvailable is 0
 
@@ -298,25 +342,28 @@ Game = global.Game =
 
                     # UNO
 
-                    Game.UNO rid, uid
+                    console.log 'UNO', rid, uid
+                    #Game.UNO rid, uid
                     break
 
-                if _player.cards.length is 0 and not IsFunctional[card.number]
+                if _player.cards.length is 0
 
-                    # 获胜
+                    if not IsFunctional[card.number]
 
-                    Game.Win rid, uid
-                    break
+                        # 获胜
 
-                else
+                        console.log 'WIN', rid, uid
+                        #Game.Win rid, uid
+                        break
 
-                    # 需要补牌 * 2
-                    
-                    Game.DrawCards rid, currentPlayer, 2
-                    
-                    currentPlayer.socket.emit '/game/card/updated', {cards: currentPlayer.cards}
-                    
-                    break
+                    else
+
+                        # 需要补牌 * 2
+                        
+                        Game.DrawCards rid, currentPlayer, 2
+                        currentPlayer.socket.emit '/game/card/updated', {cards: currentPlayer.cards}
+                        
+                        break
 
         # 下一局~
 
@@ -329,6 +376,7 @@ onServerReady = ->
 
     app = @
     app.post '/ajax/game/play', Server.RequireLogin, controller_playcard
+    app.post '/ajax/game/draw', Server.RequireLogin, controller_drawcard
 
 onSocketIOReady = ->
 
@@ -339,6 +387,50 @@ controller_playcard = (req, res) ->
     result = Game.PlayCard req.body.rid, req.session.uid, req.body.card, req.body.count, req.body.extra
 
     res.write JSON.stringify result
+    res.end()
+
+controller_drawcard = (req, res) ->
+
+    uid = req.session.uid
+    rid = req.body.rid
+
+    room = Room.Info[rid]
+
+    if room.CurrentUid isnt uid
+
+        res.write JSON.stringify { errorMsg: '您当前不能摸牌', succeeded: false }
+        res.end()
+        return
+
+    player = Game.GetPlayerByUid rid, uid
+
+    if room.CurrentPlus > 0
+
+        plusType = room.CurrentPlusType
+
+        Game.DrawCards rid, player, room.CurrentPlus
+        room.CurrentPlus = 0
+        room.CurrentPlusType = null
+        player.socket.emit '/game/card/updated', {cards: player.cards}
+
+        if plusType is 'plus2'
+
+            # 如果是+2，则先摸n张牌，然后继续当前玩家
+            console.log 'RepeatCurrentTurn'
+            Game.RepeatCurrentTurn rid
+
+        else
+
+            # 如果是+4，则摸n张牌，然后下一轮
+            Game.NextTurn rid
+
+    else
+        
+        # 否则，一直摸牌直到可以出牌
+        Game.DrawCards rid, player
+        player.socket.emit '/game/card/updated', {cards: player.cards}
+
+    res.write JSON.stringify {}
     res.end()
 
 ServerReadyHandlers.push onServerReady

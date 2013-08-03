@@ -14,7 +14,8 @@
             isStarted: false,
             myTurn: false,
             currentCard: null,
-            plus: 0
+            plus: 0,
+            locked: false
         };
     }
 
@@ -83,8 +84,11 @@
     var noticebar_hide_timeout = null;
     var last_notice_bar;
 
-    function noticebar_show(content)
+    function noticebar_show(content, delay)
     {
+        if (delay == undefined)
+            delay = 1000;
+
         var $b = $('<div class="notice-bar"><div class="notice-content"></div></div>');
         $b.prependTo('.page-room');
 
@@ -99,11 +103,11 @@
         setTimeout(function()
         {
             $b.addClass('show');
-        });
+        }, 0);
 
         last_notice_bar = $b;
 
-        noticebar_hide_timeout = setTimeout(noticebar_hide, 1000);
+        noticebar_hide_timeout = setTimeout(noticebar_hide, delay);
     }
 
     function noticebar_hide()
@@ -123,30 +127,24 @@
 
     //==========================================
 
-    var plusbar_hide_timeout = null;
-    var last_plus_bar;
+    var last_plus_bar = null;
 
     function plusbar_show(content)
     {
+        if (last_plus_bar !== null)
+            plusbar_hide();
+        
         var $b = $('<div class="plus-bar"></div>');
         $b.prependTo('.page-room');
 
         $b.text(content);
 
-        if (plusbar_hide_timeout != null)
-        {
-            clearTimeout(plusbar_hide_timeout);
-            plusbar_hide();
-        }
-
         setTimeout(function()
         {
             $b.addClass('show');
-        });
+        }, 0);
 
         last_plus_bar = $b;
-
-        plusbar_hide_timeout = setTimeout(plusbar_hide, 1000);
     }
 
     function plusbar_hide()
@@ -159,7 +157,7 @@
             bar = null;
         }, 1000);
 
-        plusbar_hide_timeout = null;
+        last_plus_bar = null;
     }
 
     //==========================================
@@ -172,6 +170,100 @@
         socket.on('/game/start', eh_game_start);
         socket.on('/game/turn', eh_game_turn);
         socket.on('/game/play', eh_game_play);
+        socket.on('/game/card/updated', eh_game_card_update);
+    }
+
+    function eh_game_card_update(newcards)
+    {
+        newcards = newcards.cards;
+
+        //1. 对比哪些牌是新的
+        for (var k in cards)
+        {
+            cards[k].used = false;
+        }
+
+        for (var i in newcards)
+        {
+            for (var j in cards)
+            {
+
+                if (cards[j].used == false)
+                {
+
+                    if (newcards[i].number == cards[j].number && newcards[i].color == cards[j].color)
+                    {
+
+                        cards[j].used = true;
+                        newcards[i].existed = true;
+                        break;
+
+                    }
+
+                }
+
+            }
+        }
+
+        for (var k in cards)
+        {
+            delete cards[k].used;
+        }
+
+        for (var k in newcards)
+        {
+            if (!newcards[k].existed)
+            {
+                // this is a new card
+                card_uniqid++;
+                cards.push({number: newcards[k].number, color: newcards[k].color, uniqid: card_uniqid});
+            }
+        }
+
+        //2. Re-sort
+
+        cards.sort(function(a, b)
+        {
+            if (a.color < b.color)
+                return -1
+            else if (a.color > b.color)
+                return 1
+            else
+                if (a.number < b.number)
+                    return -1
+                else if (a.number > b.number)
+                    return 1
+                else
+                    return 0
+        });
+
+        for (var k in cards)
+        {
+            if (cards[k].dom == undefined)
+            {
+                //is a new card
+                var dom = $('<div class="card-wrapper hide" data-color="{color}" data-number="{number}" data-cardid="{uniqid}"><div class="card card-{color}-{number}"></div></div>'.format(cards[k]));
+                cards[k].dom = dom;
+
+                if (k == 0)
+                {
+                    dom.prependTo('.stage-card-mine');
+                }
+                else
+                {
+                    dom.insertAfter(cards[k-1].dom);
+                }
+            }
+        }
+
+        setTimeout(function()
+        {
+            $('.stage-card-mine .card-wrapper').removeClass('hide');
+        }, 0);
+
+        rearrange_card_dom();
+        update_card_style();
+
     }
 
     //清理牌区
@@ -325,6 +417,34 @@
         });
     }
 
+    function action_drawcard()
+    {
+
+        if (!room_state.myTurn)
+        {
+            noticebar_show('当前您还不能摸牌。');
+            return;
+        }
+
+        vj.ajax({
+
+            action: 'game/draw',
+            data:   {rid: room_state.rid},
+
+            onFailure: function(d)
+            {
+                noticebar_show(d.errorMsg);
+            },
+
+            onError: function(d)
+            {
+                noticebar_show('网络错误');
+            }
+
+        });
+
+    }
+
     function action_playcard(extra)
     {
         if ($('.color-select').length > 0 && extra == undefined)
@@ -446,8 +566,19 @@
 
         if (room_state.plus != data.plus)
         {
-            update_plus(data.plus);
+            if (data.plus > 0)
+            {
+                plusbar_show('+' + data.plus);
+            }
+            else
+            {
+                plusbar_hide();
+            }
+
+            room_state.plus = data.plus;
         }
+
+        room_state.locked = false;
 
         if (data.current_uid == info.uid)
         {
@@ -464,22 +595,35 @@
             room_state.myTurn = false;
         }
 
-        console.log('update');
         update_card_style();
     }
 
     function update_card_style()
     {
+        var validCount = 0;
+
         $('.stage-card-mine .card-wrapper').each(function()
         {
             var color = $(this).attr('data-color');
             var number = $(this).attr('data-number');
 
             if (!card_can_play(color, number))
+            {
                 $(this).addClass('invalid').removeClass('valid');
+            }
             else
+            {
                 $(this).removeClass('invalid').addClass('valid');
+                validCount++;
+            }
         });
+
+        if (validCount == 0 && room_state.myTurn)
+        {
+
+            noticebar_show('您已经无牌可出了。请等待其他玩家抢牌（如果存在），或按R来摸牌。', 5000);
+
+        }
     }
 
     function card_can_play(color, number)
@@ -501,7 +645,7 @@
         }
         else
         {
-            if (color == room_state.currentCard.color && number == room_state.currentCard.number)
+            if (color == room_state.currentCard.color && number == room_state.currentCard.number && !room_state.locked)
             {                
                 // 完全一致：可抢牌
                 canPlayCard = true;
@@ -515,35 +659,56 @@
                 }
                 else
                 {
-                    // 判断花色
-                    if (number == 'plus4')
+                    if (room_state.plus > 0)
                     {
-                        // 永远可+4
-                        canPlayCard = true;
-                    }
-                    else if (room_state.currentCard.number == 'plus2' && number == 'changecolor')
-                    {
-                        // 上一局是+2，本局不能换颜色
-                        canPlayCard = false;
-                    }
-                    else if (room_state.currentCard.number == 'plus4' && number == 'changecolor')
-                    {
-                        // 上一局是+4，本局不能换颜色
-                        canPlayCard = false;
-                    }
-                    else if (number == 'changecolor')
-                    {
-                        // 可换色
-                        canPlayCard = true;
-                    }
-                    else if (room_state.currentCard.number == number || room_state.currentCard.color == color)
-                    {
-                        // 颜色或花色一致，本局可出牌
-                        canPlayCard = true;
+                        if (number != 'plus2' && number != 'plus4')
+                        {
+                            canPlayCard = false
+                        }
+                        else
+                        {
+                            if (room_state.currentCard.number == 'plus4' && number == 'plus2')
+                            {
+                                canPlayCard = false
+                            }
+                            else
+                            {
+                                canPlayCard = true
+                            }
+                        }
                     }
                     else
                     {
-                        canPlayCard = false;
+                        // 判断花色
+                        if (number == 'plus4')
+                        {
+                            // 永远可+4
+                            canPlayCard = true;
+                        }
+                        else if (room_state.currentCard.number == 'plus2' && number == 'changecolor')
+                        {
+                            // 上一局是+2，本局不能换颜色
+                            canPlayCard = false;
+                        }
+                        else if (room_state.currentCard.number == 'plus4' && number == 'changecolor')
+                        {
+                            // 上一局是+4，本局不能换颜色
+                            canPlayCard = false;
+                        }
+                        else if (number == 'changecolor')
+                        {
+                            // 可换色
+                            canPlayCard = true;
+                        }
+                        else if (room_state.currentCard.number == number || room_state.currentCard.color == color)
+                        {
+                            // 颜色或花色一致，本局可出牌
+                            canPlayCard = true;
+                        }
+                        else
+                        {
+                            canPlayCard = false;
+                        }
                     }
                 }
             }
@@ -557,11 +722,20 @@
         $(document).keypress(function(e)
         {
             var tag = e.target.tagName.toLowerCase();
-            if ( e.which === 32 && tag != 'input' && tag != 'textarea') 
+            if ( tag != 'input' && tag != 'textarea') 
             {
 
-                action_playcard();
-                
+                if (e.which === 32)
+                {
+                    //Space
+                    action_playcard();
+                }
+                else if (e.which === 114)
+                {
+                    //R
+                    action_drawcard();
+                }
+
             }
         });
     });

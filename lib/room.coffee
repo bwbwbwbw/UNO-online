@@ -119,16 +119,21 @@ controller_room_start = (req, res) ->
     if Room.Info[rid].Players[0].uid isnt uid
         res.write JSON.stringify {errorMsg: '喂喂你不是OP啊！', succeeded: false}
         res.end()
+        return
 
     if Room.Info[rid].Players.length < 2
         res.write JSON.stringify {errorMsg: '2人或以上才可以开始 >_<', succeeded: false}
         res.end()
+        return
 
     if Room.Info[rid].Started
         res.write JSON.stringify {errorMsg: '游戏已经开始了 0.0 乃在做什么', succeeded: false}
         res.end()
+        return
 
     Room.Start rid
+    res.write JSON.stringify {}
+    res.end()
 
 controller_room_detail = (req, res) ->
 
@@ -155,6 +160,7 @@ controller_room_create = (req, res) ->
     if max < 2
         res.write JSON.stringify {errorMsg: '人数至少是2个', succeeded: false}
         res.end()
+        return
 
     rid = Room.Create req.body.name, max
 

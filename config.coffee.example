@@ -17,5 +17,17 @@ Config = global.Config =
 
     LocalVariables:
 
-        UIRev:      1
+        UIRev:      2
         Site:       'UNOOnline'
+
+        # User Specific
+
+        uid:        '000000000000000000000000'
+        logined:    false
+        user:       'guest'
+        nick:       'Guest'
+        data:
+            user:   'guest'
+            nick:   'Guest'
+            win:    0
+            lost:   0
