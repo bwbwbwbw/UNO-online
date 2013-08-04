@@ -503,6 +503,11 @@ controller_drawcard = (req, res) ->
     isCardAvailable = (req.body.cardAvailable is '1')
 
     room = Room.Info[rid]
+
+    if not room?
+        res.write JSON.stringify { errorMsg: 'invalid RoomID', succeeded: false }
+        res.end()
+        return
     
     if not room.Started
         res.write JSON.stringify { errorMsg: '游戏还没开始 0.0', succeeded: false }
