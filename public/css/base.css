@@ -590,10 +590,27 @@ a:focus {
   line-height: 1.5em;
 }
 .page-help h2 {
-  margin-top: 20px;
+  margin-top: 30px;
+  display: block;
 }
 .page-help p {
   margin: 5px 0;
+}
+.page-help del {
+  color: #aaa;
+}
+.page-help table td,
+.page-help table th {
+  border: 1px solid #ddd;
+  background: rgba(255,255,255,0.7);
+  padding: 5px;
+  vertical-align: middle;
+}
+.page-help .t1 {
+  width: 120px;
+}
+.page-help .t2 {
+  width: 100px;
 }
 .page-index {
   display: none;

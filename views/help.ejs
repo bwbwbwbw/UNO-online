@@ -7,6 +7,41 @@
 <p>游戏牌分四种颜色：红色、绿色、蓝色及黄色，每种色有25张牌，其中19张为数字牌（0-9），其余为功能牌："skip"（跳牌）、"draw two"（罚牌2张）及"reverse"（逆转出牌方向），另有黑色特别牌两种："wild"（转色）及"wild draw four"（转色及罚牌4张）。</p>
 <p>玩者发出的牌，须与上个玩者发出的牌之颜色或数字相同，但黑色特别牌则无此限制，可任意发出。玩者若无牌可发，则须从牌叠上取牌，若符合可即时发出，<del>否则就当跳过</del>若不符合，则需继续取牌，直到可以出牌。</p>
 <p>当玩家打出Draw Two时下家<del>必须抽两张牌</del>若有+2或+4牌则可出牌并将效果叠加，若无则必须取两张牌并跳牌；Wild Draw Four也一样。</p>
+<p>当自己手上有与一个玩家出的牌同数字且同颜色的牌时，可以抢先出牌<del>（仅限于普通牌）</del>，中间的玩家失去出牌机会。</p>
+
+<table>
+<tbody><tr>
+<th>卡名</th>
+<th>俗称</th>
+<th>功能</th>
+</tr>
+<tr>
+<td class="t1"><i>Draw two</i></td>
+<td class="t2">加两张</td>
+<td class="t3">下位玩者若有+2或+4牌则可出牌并将效果叠加，若无则停止出牌一次，并罚抽2张牌。</td>
+</tr>
+<tr>
+<td><i>Skip</i></td>
+<td>禁止、阻挡牌</td>
+<td>下位玩者停止出牌一次</td>
+</tr>
+<tr>
+<td><i>Reverse</i></td>
+<td>反转</td>
+<td>发牌顺序方向逆转</td>
+</tr>
+<tr>
+<td><i>Wild</i></td>
+<td>万用牌</td>
+<td>发牌者说出四色中其中一种，下位玩者必须跟随（除非出黑牌）</td>
+</tr>
+<tr>
+<td><i>Wild draw four</i></td>
+<td>王牌</td>
+<td>发牌者说出四色中其中一种，下位玩者若有+4牌则可出牌并将效果叠加，若无则停止出牌一次，并罚抽4张牌。<del>只能在手上没有符合的颜色牌时才能发出</del></td>
+</tr>
+</tbody></table>
+
 <h2>关于</h2>
 <p>Developed by Breeswish.<br>
 The game is build with Node.js, MongoDB, express, socket.io, and other open-source projects.</p>
