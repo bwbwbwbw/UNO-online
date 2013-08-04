@@ -84,12 +84,12 @@ Game = global.Game =
 
         kickUid = Room.Info[_rid].CurrentUid
 
-        room.RoundCounter = setTimeout ->
+        room.RoundCounter = setTimeout(->
 
             Game.KickPlayer _rid, kickUid
             room.RoundCounter = null
 
-        , 60*1000
+        , 60*1000)
 
     RepeatCurrentTurn: (rid) ->
 
@@ -467,6 +467,7 @@ onServerReady = ->
     app = @
     app.post '/ajax/game/play', Server.RequireLogin, controller_playcard
     app.post '/ajax/game/draw', Server.RequireLogin, controller_drawcard
+    app.post '/ajax/game/session', Server.RequireLogin, controller_updatesession
 
 onSocketIOReady = ->
 
@@ -484,10 +485,17 @@ controller_playcard = (req, res) ->
     res.write JSON.stringify result
     res.end()
 
+controller_updatesession = (req, res) ->
+
+    res.write JSON.stringify {}
+    res.end()
+
 controller_drawcard = (req, res) ->
 
     uid = req.session.uid
     rid = req.body.rid
+
+    isCardAvailable = (req.body.cardAvailable is '1')
 
     room = Room.Info[rid]
     
@@ -522,10 +530,16 @@ controller_drawcard = (req, res) ->
         Game.NextTurn rid
 
     else
-        
-        # 否则，一直摸牌直到可以出牌
 
-        Game.DrawCards rid, player
+        if isCardAvailable
+
+            Game.DrawCards rid, player, 1
+
+        else
+            
+            # 一直摸牌直到可以出牌
+            Game.DrawCards rid, player
+        
         player.socket.emit '/game/card/updated', {cards: player.cards}
 
         ps = Game.GetPlayerStatus(rid)

@@ -4,6 +4,17 @@
 
     var room_state;
 
+    setInterval(function()
+    {
+
+        vj.ajax({
+
+            action:     '/game/session'
+
+        });
+
+    }, 180*1000);
+
     //OP =======================================
     window.onRoomEnter = function(rid)
     {
@@ -536,18 +547,12 @@
             }
         });
 
-        if (valid)
-        {
-            noticebar_show('当前您不需要摸牌。');
-            return;
-        }
-
         noticebar_hide();
 
         vj.ajax({
 
             action: 'game/draw',
-            data:   {rid: room_state.rid},
+            data:   {rid: room_state.rid, cardAvailable: valid ? '1' : '0'},
 
             onFailure: function(d)
             {
