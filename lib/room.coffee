@@ -101,7 +101,22 @@ onServerReady = ->
     app.post '/ajax/room/create', Server.RequireLogin, controller_room_create
     app.post '/ajax/room/detail', Server.RequireLogin, controller_room_detail
     app.post '/ajax/room/start', Server.RequireLogin, controller_room_start
+    app.post '/ajax/room/chat', Server.RequireLogin, controller_room_chat
     app.post '/ajax/rooms', controller_rooms
+
+controller_room_chat = (req, res) ->
+
+    if req.body.text > 1000
+        res.write JSON.stringify {}
+        res.end()
+        return
+
+    for _player in Room.Info[req.body.rid].Players
+        _player.socket.emit '/room/chat', {nick: req.session.nick, text: req.body.text}
+
+    res.write JSON.stringify {}
+    res.end()
+
 
 controller_rooms = (req, res) ->
 

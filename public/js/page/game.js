@@ -234,7 +234,7 @@
 
         setTimeout(function()
         {
-            window.location.reload();
+            action_go_home();
         }, 3000);
     }
 
@@ -395,6 +395,8 @@
         $('.module-stage').html('<div class="stage-card-area"></div><div class="stage-card-mine"></div>');
         $('.role-start-game').remove();
 
+        $('.module-room-users .card-counter').show();
+
         room_state.isStarted = true;
 
         for (var k in data.cards)
@@ -461,7 +463,7 @@
             });
 
             $(this).addClass('selected');
-            
+
             return;
         }
 

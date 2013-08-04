@@ -711,6 +711,7 @@ a:focus {
   border: 1px solid #ddd;
   border-radius: 3px;
   right: 3px;
+  display: none;
 }
 .module-rooms .li {
   padding: 0 10px;
@@ -740,6 +741,25 @@ a:focus {
 }
 .module-rooms .li .max {
   float: right;
+}
+.module-chat .chat-content {
+  overflow: auto;
+  height: 150px;
+  background: rgba(255,255,255,0.8);
+  border: 1px solid #ddd;
+}
+.module-chat .chat-send {
+  margin-top: 10px;
+}
+.module-chat .role-chat-textbox {
+  width: 170px;
+}
+.module-chat .chat-item {
+  font-size: 12px;
+  padding: 2px 5px;
+  line-height: 1.5em;
+  word-break: break-all;
+  word-wrap: break-word;
 }
 .preloader {
   display: none;

@@ -355,14 +355,18 @@ $right-width = 180
         position    relative
         pointer-events none
         transition  background-color .3s linear, color .3s linear
+
     .li:hover
         background  rgba(255,0,0,0.05)
         color       #333
+
     .li.highlight
         background  rgba(255,0,0,0.5)
         color       #FFF!important
+
     .li.highlightText
         color       #F00
+
     .li .indicator
         opacity     0
         width       10px
@@ -372,12 +376,15 @@ $right-width = 180
         top         50%
         left        -15px
         transition  opacity .2s linear
+
     .indicator.current
         background  rgba(255,0,0,0.9)
         opacity     1
+
     .indicator.next
         background  rgba(255,0,0,0.9)
         opacity     0.3
+
     .li .card-counter
         position    absolute
         height      20px
@@ -389,6 +396,7 @@ $right-width = 180
         border      1px solid #DDD
         border-radius 3px
         right       3px
+        display     none
 
 .module-rooms
 
@@ -418,6 +426,26 @@ $right-width = 180
     .li .max
         float       right
 
+.module-chat
+    
+    .chat-content
+        overflow    auto
+        height      150px
+        background  rgba(255,255,255,0.8)
+        border      1px solid #DDD
+
+    .chat-send
+        margin-top  10px
+
+    .role-chat-textbox
+        width       ($right-width - 10)px
+
+    .chat-item
+        font-size   12px
+        padding     2px 5px
+        line-height 1.5em
+        word-break  break-all
+        word-wrap   break-word
 
 //========================================================//
 

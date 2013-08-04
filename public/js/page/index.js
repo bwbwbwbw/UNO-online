@@ -12,6 +12,8 @@
         _socket.emit('/action/go/home', {id: rid});
     }
 
+    window.action_go_home = action_go_home;
+
     var join_splash;
 
     function action_join_room(rid)
@@ -47,6 +49,15 @@
 
         var $room = $('.page-room');
         $room.html(TEMPLATE_PAGE_ROOM);
+
+        $('.role-chat-textbox').keypress(function(e)
+        {
+            if (e.which === 13)
+            {
+                chat_send(rid, $(this).val());
+                $(this).val('');
+            }
+        });
 
         vj.ajax({
 
@@ -86,6 +97,19 @@
         {
             $(this).remove();
             join_splash = null;
+        });
+    }
+
+    function chat_send(rid, content)
+    {
+        if (content.length == 0)
+            return;
+        
+        vj.ajax({
+
+            action: 'room/chat',
+            data:   {rid: rid, text: content}
+
         });
     }
 
@@ -266,6 +290,17 @@
         socket.on('/room/user/leave', function(data)
         {
             room_leave(data.uid);
+        });
+
+        socket.on('/room/chat', function(data)
+        {
+            var $c = $('.module-chat .chat-content');
+            var $li = $('<div class="chat-item"></div>');
+            $li.text(data.nick + ': ' + data.text);
+
+            $li.appendTo($c);
+
+            $c[0].scrollTop = $c[0].scrollHeight;
         });
 
         socket.on('/result/join', action_join_room_callback);
