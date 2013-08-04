@@ -587,10 +587,13 @@ a:focus {
   margin-top: 20px;
 }
 .page-help {
-  line-height: 2em;
+  line-height: 1.5em;
 }
 .page-help h2 {
   margin-top: 20px;
+}
+.page-help p {
+  margin: 5px 0;
 }
 .page-index {
   display: none;
