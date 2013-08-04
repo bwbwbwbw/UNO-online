@@ -166,6 +166,9 @@ Game = global.Game =
         player = null
         room = Room.Info[rid]
 
+        if not room?
+            return null
+
         for _player in room.Players
             if _player.uid is uid
                 player = _player
@@ -476,10 +479,10 @@ controller_playcard = (req, res) ->
         res.end()
         return
 
+    result = Game.PlayCard req.body.rid, req.session.uid, req.body.card, req.body.count, req.body.extra
+
     res.write JSON.stringify result
     res.end()
-
-    result = Game.PlayCard req.body.rid, req.session.uid, req.body.card, req.body.count, req.body.extra
 
 controller_drawcard = (req, res) ->
 
