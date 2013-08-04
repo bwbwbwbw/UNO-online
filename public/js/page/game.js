@@ -500,6 +500,27 @@
             return;
         }
 
+        //如果有可以出的牌 则跳过
+        var valid = false;
+
+        $('.stage-card-mine .card-wrapper').each(function()
+        {
+            var color = $(this).attr('data-color');
+            var number = $(this).attr('data-number');
+
+            if (card_can_play(color, number))
+            {
+                valid = true;
+                return false;
+            }
+        });
+
+        if (valid)
+        {
+            noticebar_show('当前您不需要摸牌。');
+            return;
+        }
+
         noticebar_hide();
 
         vj.ajax({
@@ -810,11 +831,13 @@
                 {
                     //Space
                     action_playcard();
+                    return false;
                 }
                 else if (e.which === 114)
                 {
                     //R
                     action_drawcard();
+                    return false;
                 }
 
             }

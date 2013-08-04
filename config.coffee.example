@@ -17,7 +17,7 @@ Config = global.Config =
 
     LocalVariables:
 
-        UIRev:      2
+        UIRev:      3
         Site:       'UNOOnline'
 
         # User Specific
