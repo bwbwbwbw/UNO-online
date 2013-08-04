@@ -452,7 +452,16 @@
         //如果是+4、+2、禁、换色，则默认不多选
         if (number == 'plus2' || number == 'plus4' || number == 'forbid' || number == 'changecolor')
         {
+            //清楚互斥状态的牌
+
+            $('.stage-card-mine .selected').each(function()
+            {
+                if ($(this).attr('data-number') !== number || $(this).attr('data-color') !== color)
+                    $(this).removeClass('selected');
+            });
+
             $(this).addClass('selected');
+            
             return;
         }
 
