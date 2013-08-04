@@ -54,6 +54,7 @@ Game = global.Game =
         room.CurrentDirection = 1
         room.CurrentCard = null
         room.CurrentLocked = false   # 如果已摸牌，则锁定
+        Game.SetRoundCounter rid
 
         next_id = room.CurrentId + room.CurrentDirection
         next_id = room.Players.length - 1 if next_id < 0
@@ -71,9 +72,30 @@ Game = global.Game =
                 playerstatus:   Game.GetPlayerStatus(rid)
             }
 
+    SetRoundCounter: (rid) ->
+
+        _rid = rid
+        room = Room.Info[rid]
+
+        if room.RoundCounter?
+
+            clearTimeout room.RoundCounter
+            room.RoundCounter = null
+
+        kickUid = Room.Info[_rid].CurrentUid
+        
+        room.RoundCounter = setTimeout ->
+
+            Game.KickPlayer _rid, kickUid
+            room.RoundCounter = null
+
+        , 60*1000
+
     RepeatCurrentTurn: (rid) ->
 
         room = Room.Info[rid]
+        
+        Game.SetRoundCounter rid
 
         next_id = room.CurrentId + room.CurrentDirection
         next_id = room.Players.length - 1 if next_id < 0
@@ -93,6 +115,9 @@ Game = global.Game =
     NextTurn: (rid) ->
 
         room = Room.Info[rid]
+
+        clearTimeout room.RoundCounter
+        room.RoundCounter = null
 
         current_id = room.CurrentId + room.CurrentDirection
         current_id = room.Players.length - 1 if current_id < 0
@@ -116,6 +141,8 @@ Game = global.Game =
             room.CurrentId = current_id
             room.CurrentUid = current_uid
         ################################################
+
+        Game.SetRoundCounter rid
 
         next_id = room.CurrentId + room.CurrentDirection
         next_id = room.Players.length - 1 if next_id < 0

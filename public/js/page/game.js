@@ -668,6 +668,17 @@
         $('.module-room-users .indicator').removeClass('current next');
         $('.module-room-users [data-id="{current_uid}"] .indicator'.format(data)).addClass('current');
         $('.module-room-users [data-id="{next_uid}"] .indicator'.format(data)).addClass('next');
+        $('.module-room-users .progress').remove();
+
+        console.log(data);
+
+        var $pg = $('<div class="progress"></div>');
+        $pg.appendTo('.module-room-users [data-id="{current_uid}"]'.format(data));
+
+        setTimeout(function()
+        {
+            $pg.addClass('begin');
+        }, 0);
 
         eh_playestatus_update(data);
 
