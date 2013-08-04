@@ -439,8 +439,25 @@
         $('.stage-card-mine').on('click', '.card-wrapper', eh_on_card_click);
     }
 
+    function hide_color_selector()
+    {
+        var $selector = $('.color-select');
+
+        if ($selector.length == 0)
+            return;
+
+        $selector.removeClass('show');
+
+        setTimeout(function()
+        {
+            $selector.remove();
+        }, 500);
+    }
+
     function eh_on_card_click()
     {
+        hide_color_selector();
+        
         if ($(this).hasClass('selected'))
         {
             $(this).removeClass('selected');
@@ -459,7 +476,9 @@
             $('.stage-card-mine .selected').each(function()
             {
                 if ($(this).attr('data-number') !== number || $(this).attr('data-color') !== color)
+                {
                     $(this).removeClass('selected');
+                }
             });
 
             $(this).addClass('selected');
@@ -577,11 +596,7 @@
                         selected.find('.card').attr('class', 'card card-' + $(this).attr('data-color') + '-' + number);
 
                         action_playcard($(this).attr('data-color'));
-                        $selector.removeClass('show');
-                        setTimeout(function()
-                        {
-                            $selector.remove();
-                        }, 500);
+                        hide_color_selector();
                     })
                     .appendTo($selector);
                 }
