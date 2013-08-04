@@ -784,7 +784,12 @@
         }
         else
         {
-            if (color == room_state.currentCard.color && number == room_state.currentCard.number && !room_state.locked)
+            if (number == room_state.currentCard.number && (number == 'plus4' || number == 'changecolor') && !room_state.locked)
+            {
+                // +4 和变色的特判
+                canPlayCard = true;
+            }
+            else if (color == room_state.currentCard.color && number == room_state.currentCard.number && !room_state.locked)
             {                
                 // 完全一致：可抢牌
                 canPlayCard = true;

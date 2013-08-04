@@ -233,7 +233,12 @@ Game = global.Game =
 
         else
 
-            if card.color is room.CurrentCard.color && card.number is room.CurrentCard.number && not room.CurrentLocked
+            if card.number is room.CurrentCard.number && (card.number is 'plus4' || card.number is 'changecolor') && not room.CurrentLocked
+
+                # 完全一致，可抢牌（变色牌的color不符合 但实际上可以抢
+                canPlayCard = true
+
+            else if card.color is room.CurrentCard.color && card.number is room.CurrentCard.number && not room.CurrentLocked
                 
                 # 完全一致且没有锁定：可抢牌
                 canPlayCard = true
