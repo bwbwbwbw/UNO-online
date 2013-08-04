@@ -83,7 +83,7 @@ Game = global.Game =
             room.RoundCounter = null
 
         kickUid = Room.Info[_rid].CurrentUid
-        
+
         room.RoundCounter = setTimeout ->
 
             Game.KickPlayer _rid, kickUid
@@ -114,6 +114,8 @@ Game = global.Game =
 
     NextTurn: (rid) ->
 
+        #TODO Locking
+        
         room = Room.Info[rid]
 
         clearTimeout room.RoundCounter

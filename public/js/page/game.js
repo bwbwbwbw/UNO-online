@@ -316,6 +316,8 @@
                 }
                 else
                 {
+                    //Sort may be break when duplicate
+                    //TODO
                     dom.insertAfter(cards[k-1].dom);
                 }
             }
@@ -457,7 +459,7 @@
     function eh_on_card_click()
     {
         hide_color_selector();
-        
+
         if ($(this).hasClass('selected'))
         {
             $(this).removeClass('selected');
