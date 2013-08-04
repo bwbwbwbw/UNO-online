@@ -819,12 +819,12 @@
                             // 永远可+4
                             canPlayCard = true;
                         }
-                        else if (room_state.currentCard.number == 'plus2' && number == 'changecolor')
+                        else if (room_state.currentCard.number == 'plus2' && number == 'changecolor' && room_state.plus > 0)
                         {
                             // 上一局是+2，本局不能换颜色
                             canPlayCard = false;
                         }
-                        else if (room_state.currentCard.number == 'plus4' && number == 'changecolor')
+                        else if (room_state.currentCard.number == 'plus4' && number == 'changecolor' && room_state.plus > 0)
                         {
                             // 上一局是+4，本局不能换颜色
                             canPlayCard = false;

@@ -273,12 +273,12 @@ Game = global.Game =
                             # 永远可+4
                             canPlayCard = true
 
-                        else if room.CurrentCard.number is 'plus2' and card.number is 'changecolor'
+                        else if room.CurrentCard.number is 'plus2' and card.number is 'changecolor' and room.CurrentPlus > 0
 
                             # 上一局是+2，本局不能换颜色
                             canPlayCard = false
 
-                        else if room.CurrentCard.number is 'plus4' and card.number is 'changecolor'
+                        else if room.CurrentCard.number is 'plus4' and card.number is 'changecolor' and room.CurrentPlus > 0
 
                             # 上一局是+4，本局不能换颜色
                             canPlayCard = false
