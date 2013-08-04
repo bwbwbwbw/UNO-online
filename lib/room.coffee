@@ -48,7 +48,8 @@ Room = global.Room =
         # Broadcast join message
         for rec in Room.Info[id].Players
             rec.socket.emit '/room/user/join', {uid: uid, nick: UID2Nick[uid]}
-
+            rec.socket.emit '/room/chat', {nick: 'System', text: UID2Nick[uid] + ' 进入了房间'}
+        
         # Client join
         Server.ClientEnter socket, 'room', {id: id}
         Room.Info[id].Players.push {socket: socket, uid: uid, nick: UID2Nick[uid]}
@@ -81,6 +82,7 @@ onClientLeaveRoom = (data) ->
 
     for rec in Room.Info[id].Players
         rec.socket.emit '/room/user/leave', {uid: uid, nick: nick}
+        rec.socket.emit '/room/chat', {nick: 'System', text: nick + ' 离开了房间'}
 
     if Room.Info[id].Players.length is 0
 
