@@ -549,6 +549,12 @@
 
         var selected = $('.stage-card-mine .selected');
 
+        if (selected.hasClass('invalid'))
+        {
+            noticebar_show('您不能出这张牌');
+            return;
+        }
+
         if (room_state.isStarted && selected.length > 0)
         {
 
