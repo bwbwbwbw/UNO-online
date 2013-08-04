@@ -67,35 +67,35 @@ Room = global.Room =
 
         Game.Start id
 
-onClientLeaveRoom = (data) ->
+onClientLeaveRoom = (data, rid, uid) ->
 
-    socket = @
+    if not rid?
 
-    id = data.id
-    uid = socket.handshake.session.data._id.toString()
-    nick = socket.handshake.session.data.nick
+        socket = @
 
-    for rec, index in Room.Info[id].Players by -1
-        if rec.uid is uid
-            Room.Info[id].Players.splice index, 1
-            # break
+        rid = data.id
+        uid = socket.handshake.session.data._id.toString()
+    
+    nick = UID2Nick[uid]
 
-    for rec in Room.Info[id].Players
-        rec.socket.emit '/room/user/leave', {uid: uid, nick: nick}
-        rec.socket.emit '/room/chat', {nick: 'System', text: nick + ' 离开了房间'}
+    Game.OnPlayerLeave rid, uid
 
-    if Room.Info[id].Players.length is 0
+    for _player in Room.Info[rid].Players
+        _player.socket.emit '/room/user/leave', {uid: uid, nick: nick}
+        _player.socket.emit '/room/chat', {nick: 'System', text: nick + ' 离开了房间'}
+
+    if Room.Info[rid].Players.length is 0
 
         # No one in the room
 
-        Room.Info[id] = null
-        delete Room.Info[id]
+        Room.Info[rid] = null
+        delete Room.Info[rid]
 
-        Server.io.sockets.emit '/room/close', {id: id}
+        Server.io.sockets.emit '/room/close', {id: rid}
 
     else
 
-        Server.io.sockets.emit '/room/update', {id: id, current: Room.Info[id].Players.length, max: Room.Info[id].Max, started: Room.Info[id].Started}
+        Server.io.sockets.emit '/room/update', {id: rid, current: Room.Info[rid].Players.length, max: Room.Info[rid].Max, started: Room.Info[rid].Started}
 
 onServerReady = ->
 

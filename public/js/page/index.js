@@ -9,6 +9,8 @@
         $('.home-page-item').hide();
         $('.page-index').fadeIn(300);
 
+        $('.page-room').empty();
+
         _socket.emit('/action/go/home', {id: rid});
     }
 
@@ -290,6 +292,12 @@
         socket.on('/room/user/leave', function(data)
         {
             room_leave(data.uid);
+        });
+
+        socket.on('/room/kicked', function(data)
+        {
+            $('.home-page-item').hide();
+            $('.page-index').fadeIn(300);
         });
 
         socket.on('/room/chat', function(data)

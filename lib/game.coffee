@@ -106,7 +106,7 @@ Game = global.Game =
 
         ################################################
         # If forbid: next
-        if room.CurrentCard.number is 'forbid'
+        if room.CurrentCard? && room.CurrentCard.number is 'forbid'
 
             current_id = room.CurrentId + room.CurrentDirection
             current_id = room.Players.length - 1 if current_id < 0
@@ -401,7 +401,29 @@ Game = global.Game =
         Game.NextTurn rid
         true
 
+    OnPlayerLeave: (rid, uid) ->
 
+        room = Room.Info[rid]
+
+        if room.CurrentUid is uid
+
+            # 当前那只家伙走了
+            Game.NextTurn rid
+
+        for rec, index in room.Players by -1
+            if rec.uid is uid
+                room.Players.splice index, 1
+                break
+
+    KickPlayer: (rid, uid) ->
+
+        room = Room.Info[rid]
+        socket = Game.GetPlayerByUid(rid, uid).socket
+        
+        Server.ClientEnter socket, 'index'
+        socket.emit '/room/kicked'
+
+        true
 
 onServerReady = ->
 
