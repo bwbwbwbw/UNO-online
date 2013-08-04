@@ -447,6 +447,11 @@ Game = global.Game =
     KickPlayer: (rid, uid) ->
 
         room = Room.Info[rid]
+        player = Game.GetPlayerByUid(rid, uid)
+
+        if player is null
+            return true
+
         socket = Game.GetPlayerByUid(rid, uid).socket
         
         Server.ClientEnter socket, 'index'
@@ -471,10 +476,10 @@ controller_playcard = (req, res) ->
         res.end()
         return
 
-    result = Game.PlayCard req.body.rid, req.session.uid, req.body.card, req.body.count, req.body.extra
-
     res.write JSON.stringify result
     res.end()
+
+    result = Game.PlayCard req.body.rid, req.session.uid, req.body.card, req.body.count, req.body.extra
 
 controller_drawcard = (req, res) ->
 
@@ -516,7 +521,7 @@ controller_drawcard = (req, res) ->
     else
         
         # 否则，一直摸牌直到可以出牌
-        
+
         Game.DrawCards rid, player
         player.socket.emit '/game/card/updated', {cards: player.cards}
 

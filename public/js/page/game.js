@@ -687,8 +687,6 @@
         $('.module-room-users [data-id="{next_uid}"] .indicator'.format(data)).addClass('next');
         $('.module-room-users .progress').remove();
 
-        console.log(data);
-
         var $pg = $('<div class="progress"></div>');
         $pg.appendTo('.module-room-users [data-id="{current_uid}"]'.format(data));
 
