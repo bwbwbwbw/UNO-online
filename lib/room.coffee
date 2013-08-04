@@ -173,11 +173,17 @@ controller_room_detail = (req, res) ->
 
 controller_room_create = (req, res) ->
 
-    max = parseInt req.body.max
+    max = parseInt req.body.max, 10
     if max < 2
         res.write JSON.stringify {errorMsg: '人数至少是2个', succeeded: false}
         res.end()
         return
+
+    if max is NaN
+        max = 10
+
+    if req.body.name > 15
+        req.body.name = req.body.name.substring 0, 15
 
     rid = Room.Create req.body.name, max
 
