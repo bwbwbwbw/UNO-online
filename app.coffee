@@ -15,6 +15,8 @@ require './lib/user.coffee'
 require './lib/room.coffee'
 require './lib/game.coffee'
 
+require './lib/REPL.coffee'
+
 global.logs = []
 global.log = (msg) ->
     dt = moment().format 'MMMM Do YYYY, hh:mm:ss'
