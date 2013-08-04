@@ -152,6 +152,7 @@ onServerReady = ->
 
     app = @
     app.get '/', controller_index
+    app.get '/help', controller_help
     app.post '/ajax/online_users', controller_onlines
 
 onSocketIOReady = ->
@@ -163,6 +164,10 @@ controller_gohome = (data) ->
 
     socket = @
     Server.ClientEnter socket, 'index'
+
+controller_help = (req, res) ->
+
+    res.render 'help', {title: 'Help'}
 
 controller_index = (req, res) ->
 
