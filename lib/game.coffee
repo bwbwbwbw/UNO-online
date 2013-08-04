@@ -1,6 +1,6 @@
 CardMap = []
 ColorMap = ['green', 'red', 'yello', 'blue']
-NumberMap = ['1', '2', '3', '4', '5', '6', '7', '8', '9', '0', 'empty', 'forbid', 'reverse', 'plus2']
+NumberMap = ['1', '2', '3', '4', '5', '6', '7', '8', '9', '1', '2', '3', '4', '5', '6', '7', '8', '9', '0', 'empty', 'forbid', 'reverse', 'plus2']
 
 extend = require('util')._extend
 
@@ -11,7 +11,7 @@ Game = global.Game =
     Initialize: ->
 
         for num, index in NumberMap
-            if index <= 9
+            if index <= 18
                 IsFunctional[num] = false
             else
                 IsFunctional[num] = true
@@ -115,7 +115,7 @@ Game = global.Game =
     NextTurn: (rid) ->
 
         #TODO Locking
-        
+
         room = Room.Info[rid]
 
         clearTimeout room.RoundCounter
@@ -509,19 +509,14 @@ controller_drawcard = (req, res) ->
         for _player in room.Players
             _player.socket.emit '/game/playerstatus/update', { playerstatus: ps }
 
-        if plusType is 'plus2'
+        # 如果有罚牌，则跳到下一玩家
 
-            # 如果是+2，则先摸n张牌，然后继续当前玩家
-            Game.RepeatCurrentTurn rid
-
-        else
-
-            # 如果是+4，则摸n张牌，然后下一轮
-            Game.NextTurn rid
+        Game.NextTurn rid
 
     else
         
         # 否则，一直摸牌直到可以出牌
+        
         Game.DrawCards rid, player
         player.socket.emit '/game/card/updated', {cards: player.cards}
 
